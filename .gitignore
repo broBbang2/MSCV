@@ -2,6 +2,7 @@
 __pycache__/
 .DS_Store
 *.pt
+mobileclip*.ts
 runs/
 data/raw/
 data/videos/

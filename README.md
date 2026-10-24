@@ -11,6 +11,14 @@
 - 들고 다니며 끊김 없이 볼 수 있을 만큼 빨라야 한다
 - 최종 배포는 아이폰 온디바이스(CoreML)
 
+**성공 기준 (초안)**
+
+- 속도: 아이폰에서 20 FPS 이상, 모델 파일 10MB 이하
+- 정확도: 직접 찍은 시험 세트(움직이며 촬영)에서 mAP50 0.7 이상
+
+SAM 3, YOLOE 같은 큰 모델은 정확하지만 아이폰에서 실시간으로 돌릴 수 없다.
+그래서 큰 모델은 라벨을 만드는 **선생님**으로 쓰고, 그 라벨로 작은 **학생** 모델(YOLO n/s)을 학습시켜 배포한다.
+
 ## 로드맵
 
 - [ ] **1. 기성 모델 써보기** — 사전학습 YOLO를 아이폰 카메라에 돌려보고, 무엇을 잘 잡고 무엇을 놓치는지 관찰 ([기록](notes/01-pretrained-yolo.md))
@@ -39,7 +47,11 @@ uv run scripts/01_webcam_yolo.py --camera 1       # 아이폰(연속성 카메�
 |---|---|
 | `scripts/01_webcam_yolo.py` | 카메라에 사전학습 YOLO 실행, 화면에 FPS 표시. `s` 원본 프레임 저장, `q` 종료 |
 | `scripts/02_extract_frames.py` | 폰 영상에서 일정 간격으로 프레임 추출, 흐린 프레임은 자동으로 버림 |
-| `scripts/03_train.py` | 공개 데이터셋(기본 HomeObjects-3K)으로 사전학습 YOLO 파인튜닝. 결과는 `runs/<이름>/weights/best.pt` |
+| `scripts/03_train.py` | 공개 데이터셋(기본 HomeObjects-3K)이나 `--data mine`으로 사전학습 YOLO 파인튜닝. 결과는 `runs/<이름>/weights/best.pt` |
+| `scripts/04_auto_label.py` | 선생님 모델(YOLOE)에 물건 이름을 줘서 `data/raw` 사진에 라벨 초안. 결과는 `data/datasets/mine/`, 미리보기는 `mine/preview/` |
+| `scripts/05_review.py` | 자동 라벨을 X-AnyLabeling으로 검수(`open`)하고 YOLO 라벨로 되돌림(`save`) |
+| `scripts/status.py` | 프로젝트 전체 현황: 로드맵 체크, 데이터·라벨 수, 검수 진행, run별 epoch·best mAP·상태 |
+| `scripts/watch_train.py` | 학습 진행 상황(epoch, 남은 시간, mAP, loss) 요약. 학습 중 다른 터미널에서 실행 |
 
 자주 쓰는 옵션:
 
