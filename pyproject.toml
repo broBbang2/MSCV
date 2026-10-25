@@ -1,19 +1,22 @@
 [project]
 name = "firstcv"
 version = "0.1.0"
-description = "무선 아이폰 카메라로 일상 사물을 실시간 인식하는 객체 탐지 프로젝트"
+description = "아이폰 온디바이스 소형 사물 인식 알고리즘: 큰 모델이 라벨을 만들고 작은 YOLO가 배워 실시간 인식"
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
 dependencies = [
     "ultralytics>=8.3,<9",
     "opencv-python>=4.10",
     "clip",
+    "pyarrow>=26.0.0",
+    "huggingface-hub>=2.3.0",
 ]
 
 [dependency-groups]
 dev = [
     "ruff>=0.8",
     "ipykernel>=6",
+    "coremltools>=9.0",
 ]
 
 [tool.uv]

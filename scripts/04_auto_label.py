@@ -15,21 +15,27 @@ from __future__ import annotations
 
 import argparse
 import shutil
-from collections import Counter, defaultdict
+from collections import Counter
 from pathlib import Path
 
 import cv2
 import torch
-from torchvision.ops import batched_nms
+from torchvision.ops import batched_nms, nms
 from ultralytics import YOLOE
 
 ROOT = Path(__file__).resolve().parents[1]
 RAW_DIR = ROOT / "data" / "raw"
 OUT_DIR = ROOT / "data" / "datasets" / "mine"
 
+# 채점에만 쓰고 학습에는 절대 넣지 않는 영상 (이름이 test_로 시작하는 영상도 같은 취급)
+VAL_VIDEOS = {"촬영본"}
+
 # 학습할 클래스 → YOLOE에 줄 이름들. 이름을 바꾸거나 더하면 라벨 품질이 달라진다.
+# 클래스를 추가하면 앱 화면용 한국어 이름도 ios/FirstCV/KoreanLabels.swift에 넣는다.
+# 사람 라벨이 있는 COCO·Open Images 300장으로 채점해서 고른 이름이다 (평균 AP50 0.59 → 0.65).
+# 특히 모니터는 tv/television을 넣자 0.22 → 0.83, 모자는 baseball cap/hat을 넣자 0.75 → 0.85.
 CLASSES = {
-    "monitor": ["computer monitor", "screen"],
+    "monitor": ["computer monitor", "screen", "television", "tv", "display"],
     "laptop": ["laptop"],
     "keyboard": ["keyboard"],
     "figure": ["figurine", "action figure", "small doll"],
@@ -37,18 +43,29 @@ CLASSES = {
     "tumbler": ["tumbler", "cup with straw"],
     "bottle": ["bottle"],
     "speaker": ["speaker"],
-    "headphones": ["headphones"],
+    "headphones": ["headphones", "headset", "earphones", "over-ear headphones"],
     "clothes": ["clothes", "t-shirt", "jersey"],
-    "cap": ["cap"],
+    "cap": ["cap", "baseball cap", "hat"],
     "book": ["book"],
     "mouse": ["computer mouse"],
-    "phone": ["cell phone", "smartphone"],
+    "phone": ["cell phone", "smartphone", "mobile phone"],
     "cup": ["cup", "mug", "plastic cup"],
     "shoes": ["shoes", "sneakers"],
-    "backpack": ["backpack"],
+    "backpack": ["backpack", "bag"],
     "chair": ["chair"],
-    "sofa": ["sofa"],
+    "sofa": ["sofa", "couch"],
+    # 처음엔 물건만 골랐는데, 사람이 없으면 공개 사진 속 수천 명이 "배경"으로 학습돼 사람을 적극적으로 무시하게 된다.
+    # 맨 뒤에 붙여서 기존 클래스 번호는 그대로 둔다.
+    "person": ["person"],
 }
+
+# 우리 클래스는 아니지만 자주 헷갈리는 물건. 선생님이 침대를 소파로, 리모컨을 휴대폰으로 억지로 맞추지 않게
+# 같이 찾게 한 뒤 라벨에서는 버린다. 사람은 이제 진짜 클래스라 여기 넣지 않는다.
+# (헷갈림용으로 넣었을 땐 피규어가 사람으로 흡수돼 AP50 0.77 → 0.33. 지금은 clean()의 겹침 정리가
+# 같은 물체에 person과 figure가 함께 붙으면 점수 높은 쪽만 남긴다.)
+DISTRACTORS = ["bed", "pillow", "blanket", "remote control", "power strip", "cable", "box",
+               "table", "desk", "door", "curtain", "plant", "lamp"]
+SCREEN_CONTAINED = 0.85  # 모니터 박스 안에 이 비율 이상 들어간 박스는 화면 속 장면으로 보고 버린다
 
 
 def predict_rotated(model: YOLOE, frame, conf: float) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
@@ -70,24 +87,45 @@ def predict_rotated(model: YOLOE, frame, conf: float) -> tuple[torch.Tensor, tor
 
 
 def split_of(paths: list[Path]) -> dict[Path, str]:
-    """영상 단위로 train/val을 나눈다. 영상이 하나뿐이면 뒤쪽 20% 구간을 val로 쓴다.
+    """영상 단위로 train/val을 나눈다. VAL_VIDEOS와 이름이 test_로 시작하는 영상만 val이다.
 
     같은 영상의 이웃 프레임은 거의 똑같아서, 무작위로 섞어 나누면 val 점수가 부풀려진다.
+    val을 고정해야 앱 데이터가 계속 쌓여도 모델끼리 같은 기준으로 비교할 수 있다.
     """
-    by_video = defaultdict(list)
-    for p in sorted(paths):
-        by_video[p.stem.rsplit("_", 1)[0]].append(p)
-    videos = sorted(by_video)
     split = {}
-    if len(videos) >= 2:
-        val_videos = set(videos[-max(len(videos) // 5, 1):])  # 이름순 마지막 20% 영상
-        for v, ps in by_video.items():
-            split.update({p: "val" if v in val_videos else "train" for p in ps})
-    else:
-        ps = by_video[videos[0]]
-        cut = int(len(ps) * 0.8)
-        split.update({p: "train" if i < cut else "val" for i, p in enumerate(ps)})
+    for p in paths:
+        video = p.stem.rsplit("_", 1)[0]
+        split[p] = "val" if video in VAL_VIDEOS or video.startswith("test_") else "train"
     return split
+
+
+def clean(boxes: torch.Tensor, scores: torch.Tensor, cls: torch.Tensor,
+          monitor: int) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+    """선생님 결과를 라벨로 쓸 수 있게 정리한다.
+
+    1. 같은 물체에 우리 클래스와 헷갈림용 이름이 함께 붙으면 점수가 높은 쪽만 남기고, 헷갈림용 박스는 버린다
+    2. 이름이 달라도 같은 클래스면, 같은 물체를 여러 번 찾은 박스를 하나만 남긴다
+    3. 모니터 화면 속 장면(영상 속 사람·소파 등)은 실제 물건이 아니므로 버린다
+    """
+    keep = nms(boxes, scores, iou_threshold=0.7)
+    boxes, scores, cls = boxes[keep], scores[keep], cls[keep]
+    real = cls >= 0
+    boxes, scores, cls = boxes[real], scores[real], cls[real]
+
+    keep = batched_nms(boxes, scores, cls, iou_threshold=0.5)
+    boxes, scores, cls = boxes[keep], scores[keep], cls[keep]
+
+    screens = boxes[cls == monitor]
+    if len(screens) and len(boxes):
+        # 각 박스가 모니터 박스와 겹치는 넓이 / 자기 넓이
+        lt = torch.max(boxes[:, None, :2], screens[None, :, :2])
+        rb = torch.min(boxes[:, None, 2:], screens[None, :, 2:])
+        inter = (rb - lt).clamp(min=0).prod(dim=2)
+        area = (boxes[:, 2:] - boxes[:, :2]).prod(dim=1).clamp(min=1)
+        inside = (inter / area[:, None]).max(dim=1).values >= SCREEN_CONTAINED
+        keep = ~inside | (cls == monitor)
+        boxes, scores, cls = boxes[keep], scores[keep], cls[keep]
+    return boxes, scores, cls
 
 
 def main() -> None:
@@ -97,8 +135,9 @@ def main() -> None:
     args = parser.parse_args()
 
     names = list(CLASSES)
-    prompts = [p for ps in CLASSES.values() for p in ps]
-    prompt_to_class = torch.tensor([names.index(c) for c, ps in CLASSES.items() for _ in ps])
+    prompts = [p for ps in CLASSES.values() for p in ps] + DISTRACTORS
+    # 헷갈림용 이름은 -1로 표시했다가 나중에 버린다
+    prompt_to_class = torch.tensor([names.index(c) for c, ps in CLASSES.items() for _ in ps] + [-1] * len(DISTRACTORS))
 
     model = YOLOE(args.model)
     model.set_classes(prompts)
@@ -117,10 +156,7 @@ def main() -> None:
         frame = cv2.imread(str(p))
         h, w = frame.shape[:2]
         boxes, scores, pids = predict_rotated(model, frame, args.conf)
-        cls = prompt_to_class[pids]
-        # 이름이 달라도 같은 클래스면, 같은 물체를 여러 번 찾은 박스를 하나만 남긴다
-        keep = batched_nms(boxes, scores, cls, iou_threshold=0.5)
-        boxes, scores, cls = boxes[keep], scores[keep], cls[keep]
+        boxes, scores, cls = clean(boxes, scores, prompt_to_class[pids], names.index("monitor"))
 
         s = split[p]
         shutil.copy2(p, OUT_DIR / "images" / s / p.name)

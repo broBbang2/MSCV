@@ -12,6 +12,7 @@ from __future__ import annotations
 import argparse
 import csv
 import re
+import subprocess
 import time
 from pathlib import Path
 
@@ -25,6 +26,8 @@ IMAGE_EXTS = {".jpg", ".jpeg", ".png"}
 VIDEO_EXTS = {".mov", ".mp4", ".m4v"}
 # 로그가 이 시간 안에 바뀌었으면 학습 중으로 본다 (진행 바가 매 iteration마다 로그를 쓴다)
 RUNNING_WINDOW_SEC = 120
+# 실행 중인 작업의 로그가 이 시간 넘게 그대로면 멈춘 것으로 의심한다
+STALL_SEC = 600
 
 
 def count_files(folder: Path, exts: set[str]) -> int:
@@ -139,9 +142,48 @@ def notes() -> None:
         print("  없음")
 
 
+def stdout_file(pid: str) -> Path | None:
+    """프로세스의 표준출력이 파일로 리다이렉트돼 있으면 그 경로 (예: > runs/x.log)."""
+    # 프로세스가 그 사이 끝나면 lsof가 실패하므로 check=False
+    out = subprocess.run(["lsof", "-a", "-p", pid, "-d", "1", "-Fn"],
+                         check=False, capture_output=True, text=True)
+    for line in out.stdout.splitlines():
+        if line.startswith("n/") and Path(line[1:]).is_file():
+            return Path(line[1:])
+    return None
+
+
+def jobs() -> None:
+    """학습뿐 아니라 라벨링·데이터 받기 등 scripts/의 번호 스크립트가 돌고 있는지 본다."""
+    print("■ 실행 중인 작업")
+    out = subprocess.run(["ps", "-ax", "-o", "pid=,etime=,command="],
+                         check=True, capture_output=True, text=True)
+    found = False
+    for line in out.stdout.splitlines():
+        pid, etime, cmd = line.split(None, 2)
+        # uv run 래퍼 말고 실제 python 프로세스만
+        if str(ROOT) not in cmd.split()[0] or not re.search(r"scripts/\d\d_\w+\.py", cmd):
+            continue
+        found = True
+        script = re.search(r"scripts/\S+", cmd)[0]
+        print(f"  {script}{cmd.split(script, 1)[1]}  (pid {pid}, 실행 {etime})")
+        log = stdout_file(pid)
+        if log is None:
+            print("    로그: 터미널에 직접 출력 중 (파일로 저장 안 함)")
+            continue
+        idle = time.time() - log.stat().st_mtime
+        warn = f"  ⚠ {int(idle // 60)}분째 로그 변화 없음 — 멈췄을 수 있음" if idle > STALL_SEC else ""
+        print(f"    로그: {log.relative_to(ROOT) if log.is_relative_to(ROOT) else log}{warn}")
+        print(f"    마지막: {last_log_line(log)[:120]}")
+    if not found:
+        print("  없음")
+    print()
+
+
 def report() -> None:
     roadmap()
     data()
+    jobs()
     runs()
     notes()
 
