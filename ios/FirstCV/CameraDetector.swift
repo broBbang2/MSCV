@@ -10,6 +10,7 @@ struct Detection: Identifiable {
     let confidence: Float
     let rect: CGRect
     var distance: Float?  // LiDAR로 잰 거리(m). 깊이를 못 받으면 nil
+    var seenFrames = 1  // Tracker가 이 물건을 몇 프레임째 보고 있는지 (음성 안내는 오래 보인 것만 말한다)
 }
 
 /// 후면 카메라 프레임을 받아 Detector(학습한 YOLO, NMS 포함 CoreML)로 물건을 찾는다.

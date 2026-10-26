@@ -24,6 +24,7 @@ import statistics
 import subprocess
 import sys
 import tempfile
+import time
 from pathlib import Path
 
 import cv2
@@ -34,8 +35,16 @@ LOG_DIR = ROOT / "data" / "app_logs"
 BUNDLE_ID = "dev.breeadee.firstcv"
 
 
-def devicectl(*args: str) -> subprocess.CompletedProcess:
-    return subprocess.run(["xcrun", "devicectl", *args], capture_output=True, text=True, check=True)
+def devicectl(*args: str, tries: int = 3) -> subprocess.CompletedProcess:
+    """아이폰이 잠겨 있거나 와이파이 연결이 잠깐 끊기면 가끔 실패해서, 몇 번 다시 시도한다."""
+    for i in range(tries):
+        try:
+            return subprocess.run(["xcrun", "devicectl", *args], capture_output=True, text=True, check=True)
+        except subprocess.CalledProcessError as e:
+            if i == tries - 1:
+                raise SystemExit(f"아이폰과 통신하지 못했어요. 잠금을 풀고 다시 해보세요.\n{e.stderr.strip()[-300:]}") from e
+            time.sleep(3)
+    raise AssertionError("unreachable")
 
 
 def find_iphone() -> str:

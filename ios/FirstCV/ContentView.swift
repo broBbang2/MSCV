@@ -3,6 +3,7 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject private var detector = CameraDetector()
+    @StateObject private var voice = VoiceGuide()
     @State private var confidence = 0.25
 
     var body: some View {
@@ -18,6 +19,7 @@ struct ContentView: View {
         .overlay(alignment: .top) { hud }
         .overlay(alignment: .bottom) { controls }
         .onAppear { detector.start() }
+        .onReceive(detector.$detections) { voice.update($0) }  // 매 프레임 넘겨주고, 말할지는 VoiceGuide가 정한다
     }
 
     /// 미리보기는 화면을 꽉 채우도록(aspect fill) 잘려서 보이므로, 박스도 같은 방식으로 옮긴다.
@@ -65,6 +67,13 @@ struct ContentView: View {
         VStack(spacing: 6) {
             if let error = detector.errorMessage {
                 Text(error).foregroundStyle(.red)
+            }
+            Toggle(isOn: $voice.isOn) {
+                Text(voice.isOn ? "음성 안내 켜짐 (확신도 70%↑, 3m 이내)" : "음성 안내")
+            }
+            .tint(.green)
+            if voice.isOn, !voice.lastSentence.isEmpty {
+                Text("🔊 \(voice.lastSentence)").font(.callout.bold())
             }
             Toggle(isOn: Binding(get: { detector.isTestMode }, set: { detector.setTestMode($0) })) {
                 Text(detector.isTestMode ? "시험용으로 저장 중 (학습에 안 씀)" : "시험용 모드")

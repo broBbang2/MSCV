@@ -56,7 +56,8 @@ final class Tracker {
         }
         tracks = next
         return tracks.filter { $0.hits >= minHits }
-            .map { Detection(id: $0.id, label: $0.label, confidence: $0.confidence, rect: $0.rect, distance: $0.distance) }
+            .map { Detection(id: $0.id, label: $0.label, confidence: $0.confidence, rect: $0.rect,
+                             distance: $0.distance, seenFrames: $0.hits) }
     }
 
     private func mix(_ a: CGRect, _ b: CGRect) -> CGRect {
