@@ -3,8 +3,18 @@
 손에 든 아이폰 카메라로 일상 사물 10종을 **기기 안에서 실시간으로** 인식하는 소형 객체 탐지 모델과, 그 모델을 라벨 없는 상태에서부터 만들어 내는 학습 파이프라인입니다.
 
 <p align="center">
-  <img src="docs/demo.gif" width="320" alt="아이폰 앱 실시간 인식 데모">
-  <br><sub>iPhone 16 Pro Max에서 실행 중인 앱 화면 (YOLO26s, CoreML 8비트)</sub>
+  <img src="docs/demo.gif" width="480" alt="책상을 훑는 영상에서 모니터, 키보드, 마우스, 책, 병을 인식하는 데모">
+  <br><sub>아이폰으로 책상을 훑으며 찍은 10초 영상에 앱과 같은 학생 모델(YOLO26s)을 돌린 결과 (10개 클래스만 표시).
+  리모컨을 휴대폰으로, 과자 봉지를 마우스로 잡는 순간도 그대로 두었다.</sub>
+</p>
+
+<p align="center">
+  <img src="docs/samples/scene1.jpg" width="190" alt="어두운 책상: 노트북, 모니터, 키보드, 책, 컵, 백팩, 병">
+  <img src="docs/samples/scene2.jpg" width="190" alt="밝은 책상: 노트북, 모니터, 키보드, 마우스, 휴대폰, 병">
+  <img src="docs/samples/scene3.jpg" width="190" alt="부엌: 의자, 컵">
+  <img src="docs/samples/scene4.jpg" width="190" alt="건물 복도: 멀리 있는 의자">
+  <br><sub>앱이 하루 동안 자동 저장한 프레임 중 장소가 다른 4장. 거리는 앱이 그 순간 LiDAR로 잰 값이다.
+  1번처럼 노트북 화면을 모니터로도 잡는 오류가 아직 남아 있다.</sub>
 </p>
 
 ## 요약
