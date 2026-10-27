@@ -354,6 +354,7 @@ uv run scripts/01_webcam_yolo.py --camera 1       # 아이폰(연속성 카메�
 | `scripts/08_pull_app.py` | 아이폰 앱이 저장한 프레임을 가져와 `data/raw`에 추가하고 자동 라벨까지 반영 (학습은 안 함) |
 | `scripts/09_cycle.py` | 한 바퀴: 앱 데이터 가져오기 → 라벨 → 학습(yolo26s) → 깔린 모델과 비교 → 더 나으면 아이폰에 자동 설치 |
 | `scripts/status.py` | 프로젝트 전체 현황: 로드맵 체크, 데이터·라벨 수, 검수 진행, run별 epoch·best mAP·상태 |
+| `scripts/jobs.py` | 지금 돌고 있는 작업만: 실행 시간, 로그 마지막 줄, 멈춤 경고, 학습이면 epoch·남은 시간·best mAP. `--follow`로 새로고침 |
 | `scripts/watch_train.py` | 학습 진행 상황(epoch, 남은 시간, mAP, loss) 요약. 학습 중 다른 터미널에서 실행 |
 
 자주 쓰는 옵션:

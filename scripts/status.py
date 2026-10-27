@@ -153,6 +153,26 @@ def stdout_file(pid: str) -> Path | None:
     return None
 
 
+def train_progress(run_dir: Path) -> str:
+    """학습 run의 완료 epoch, 남은 시간, best mAP 한 줄 요약."""
+    args_yaml, results = run_dir / "args.yaml", run_dir / "results.csv"
+    if not args_yaml.exists():
+        return f"학습: {run_dir.name} 준비 중"
+    total = yaml.safe_load(args_yaml.read_text())["epochs"]
+    rows = []
+    if results.exists():
+        with results.open() as f:
+            rows = [{k.strip(): float(v) for k, v in r.items()} for r in csv.DictReader(f)]
+    if not rows:
+        return f"학습: {run_dir.name} epoch 0/{total} 완료 (첫 epoch 진행 중)"
+    done, elapsed = int(rows[-1]["epoch"]), rows[-1]["time"]
+    eta = elapsed / done * (total - done)
+    best = max(rows, key=lambda r: r["metrics/mAP50-95(B)"])
+    return (f"학습: {run_dir.name} epoch {done}/{total} 완료, 남은 시간 약 {int(eta // 3600)}h"
+            f"{int(eta % 3600 // 60):02d}m, best mAP50={best['metrics/mAP50(B)']:.3f} "
+            f"(epoch {int(best['epoch'])})")
+
+
 def jobs() -> None:
     """학습뿐 아니라 라벨링·데이터 받기 등 scripts/의 번호 스크립트가 돌고 있는지 본다."""
     print("■ 실행 중인 작업")
@@ -167,6 +187,9 @@ def jobs() -> None:
         found = True
         script = re.search(r"scripts/\S+", cmd)[0]
         print(f"  {script}{cmd.split(script, 1)[1]}  (pid {pid}, 실행 {etime})")
+        if script.endswith("03_train.py"):
+            m = re.search(r"--name[ =](\S+)", cmd)
+            print(f"    {train_progress(RUNS_DIR / (m[1] if m else 'home_n'))}")
         log = stdout_file(pid)
         if log is None:
             print("    로그: 터미널에 직접 출력 중 (파일로 저장 안 함)")
