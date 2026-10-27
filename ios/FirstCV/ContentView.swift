@@ -3,8 +3,15 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject private var detector = CameraDetector()
-    @StateObject private var voice = VoiceGuide()
+    @StateObject private var voice: VoiceGuide
+    @StateObject private var walk: WalkGuide
     @State private var confidence = 0.25
+
+    init() {
+        let voice = VoiceGuide()
+        _voice = StateObject(wrappedValue: voice)
+        _walk = StateObject(wrappedValue: WalkGuide(voice: voice))  // 장애물 경고도 같은 목소리로 말한다
+    }
 
     var body: some View {
         GeometryReader { geo in
@@ -13,25 +20,37 @@ struct ContentView: View {
                 ForEach(detector.detections) { det in
                     box(for: det, in: geo.size)
                 }
+                if walk.isOn, let point = walk.markedPoint {
+                    let at = toScreen(CGRect(origin: point, size: .zero), in: geo.size).origin
+                    Circle().stroke(levelColor, lineWidth: 4).frame(width: 36, height: 36).position(at)
+                }
             }
         }
         .ignoresSafeArea()
-        .overlay(alignment: .top) { hud }
+        .overlay(alignment: .top) {
+            VStack(spacing: 8) {
+                hud
+                if walk.isOn { walkStatus }
+            }
+        }
         .overlay(alignment: .bottom) { controls }
         .onAppear { detector.start() }
         .onReceive(detector.$detections) { voice.update($0) }  // 매 프레임 넘겨주고, 말할지는 VoiceGuide가 정한다
+        .onReceive(detector.$walkReport) { walk.update($0, detections: detector.detections) }
     }
 
-    /// 미리보기는 화면을 꽉 채우도록(aspect fill) 잘려서 보이므로, 박스도 같은 방식으로 옮긴다.
-    private func box(for det: Detection, in view: CGSize) -> some View {
+    /// 미리보기는 화면을 꽉 채우도록(aspect fill) 잘려서 보이므로, 사진 좌표(0~1)도 같은 방식으로 화면 좌표로 옮긴다.
+    private func toScreen(_ r: CGRect, in view: CGSize) -> CGRect {
         let frame = detector.frameSize
         let scale = max(view.width / frame.width, view.height / frame.height)
         let dx = (view.width - frame.width * scale) / 2
         let dy = (view.height - frame.height * scale) / 2
-        let rect = CGRect(x: det.rect.minX * frame.width * scale + dx,
-                          y: det.rect.minY * frame.height * scale + dy,
-                          width: det.rect.width * frame.width * scale,
-                          height: det.rect.height * frame.height * scale)
+        return CGRect(x: r.minX * frame.width * scale + dx, y: r.minY * frame.height * scale + dy,
+                      width: r.width * frame.width * scale, height: r.height * frame.height * scale)
+    }
+
+    private func box(for det: Detection, in view: CGSize) -> some View {
+        let rect = toScreen(det.rect, in: view)
         // 같은 물건은 실행할 때마다 같은 색 (String.hashValue는 실행마다 달라져서 글자 코드 합을 쓴다)
         let hue = Double(det.label.unicodeScalars.reduce(0) { $0 + Int($1.value) * 37 } % 360) / 360
         let color = Color(hue: hue, saturation: 0.8, brightness: 1)
@@ -63,10 +82,47 @@ struct ContentView: View {
         .padding(.top, 8)
     }
 
+    private var levelColor: Color {
+        switch walk.level {
+        case .clear: .green
+        case .caution: .yellow
+        case .warn: .orange
+        case .stop: .red
+        }
+    }
+
+    /// 보행 모드 상태: "앞 1.4m · 의자", "앞 2.1m · 내려가는 계단" 또는 "길이 비어 있어요". 색이 거리 단계를 나타낸다.
+    /// 다가오는 사람·탈것이 있으면 한 줄 더 보여준다.
+    private var walkStatus: some View {
+        VStack(spacing: 6) {
+            Label(walk.statusText ?? "길이 비어 있어요",
+                  systemImage: walk.level >= .warn ? "exclamationmark.triangle.fill" : "figure.walk")
+                .font(.title3.bold())
+                .padding(.horizontal, 16).padding(.vertical, 8)
+                .background(levelColor, in: Capsule())
+                .foregroundStyle(.black)
+            if let mover = walk.approaching {
+                Label("\(KoreanLabels.name(for: mover.label)) 다가옴"
+                      + (mover.distance.map { String(format: " · %.1fm", $0) } ?? ""),
+                      systemImage: "arrow.down.forward.and.arrow.up.backward")
+                    .font(.headline.bold())
+                    .padding(.horizontal, 14).padding(.vertical, 6)
+                    .background(.purple, in: Capsule())
+                    .foregroundStyle(.white)
+            }
+        }
+    }
+
     private var controls: some View {
         VStack(spacing: 6) {
             if let error = detector.errorMessage {
                 Text(error).foregroundStyle(.red)
+            }
+            if detector.hasDepth {
+                Toggle(isOn: Binding(get: { walk.isOn }, set: { walk.isOn = $0; detector.setWalkMode($0) })) {
+                    Text(walk.isOn ? "보행 모드 켜짐 (장애물·낙차·다가오는 물체)" : "보행 모드")
+                }
+                .tint(.yellow)
             }
             Toggle(isOn: $voice.isOn) {
                 Text(voice.isOn ? "음성 안내 켜짐 (확신도 70%↑, 3m 이내)" : "음성 안내")

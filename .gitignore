@@ -12,3 +12,4 @@ ios/FirstCV/Info.plist
 ios/FirstCV/*.mlpackage
 ios/build/
 data/app_logs/
+data/prototypes/

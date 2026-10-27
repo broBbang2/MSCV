@@ -23,6 +23,16 @@ enum KoreanLabels {
         "chair": "의자",
         "sofa": "소파",
         "person": "사람",
+        "door": "문",
+        "stairs": "계단",
+        "bicycle": "자전거",
+        "car": "차",
+        "motorcycle": "오토바이",
+        "pole": "기둥",
+        "table": "테이블",
+        "trash can": "쓰레기통",
+        "bench": "벤치",
+        "traffic cone": "라바콘",
     ]
 
     static func name(for label: String) -> String {

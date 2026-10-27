@@ -1,7 +1,7 @@
 import AVFoundation
 import CoreImage
 import CoreML
-import Vision
+import CoreMotion
 
 /// 화면에 그릴 탐지 결과 하나. rect는 사진 기준 0~1 좌표이고 원점은 왼쪽 위.
 struct Detection: Identifiable {
@@ -11,10 +11,13 @@ struct Detection: Identifiable {
     let rect: CGRect
     var distance: Float?  // LiDAR로 잰 거리(m). 깊이를 못 받으면 nil
     var seenFrames = 1  // Tracker가 이 물건을 몇 프레임째 보고 있는지 (음성 안내는 오래 보인 것만 말한다)
+    var approachSpeed: Float?  // 1초에 몇 m씩 가까워지는지 (멀어지면 음수). Tracker가 거리 변화로 잰다
 }
 
 /// 후면 카메라 프레임을 받아 Detector(학습한 YOLO, NMS 포함 CoreML)로 물건을 찾는다.
+/// Vision을 거치지 않고 모델을 직접 부른다. Vision은 확신도를 클래스끼리의 비율로 바꿔서(44%가 99%로) 넘겨주기 때문이다.
 /// LiDAR가 있으면 깊이 지도를 영상과 같은 순간 것끼리 받아 물건까지의 거리를 잰다.
+/// 보행 모드에서는 깊이 지도와 중력 방향으로 걷는 길의 장애물을 찾는다 (ObstacleDetector).
 /// 앱이 켜져 있는 동안 0.5초마다 원본 프레임과 성능 기록을 Documents에 저장한다 (맥이 08_pull_app.py로 가져간다).
 final class CameraDetector: NSObject, ObservableObject, AVCaptureVideoDataOutputSampleBufferDelegate,
                             AVCaptureDataOutputSynchronizerDelegate {
@@ -26,6 +29,7 @@ final class CameraDetector: NSObject, ObservableObject, AVCaptureVideoDataOutput
     @Published private(set) var savedCount = 0
     @Published private(set) var hasDepth = false
     @Published private(set) var isTestMode = false
+    @Published private(set) var walkReport: PathReport?
     /// 카메라 프레임 크기 (세로 화면 기준). 박스를 화면 좌표로 옮길 때 쓴다. 첫 프레임에서 실제 크기로 바뀐다.
     @Published private(set) var frameSize = CGSize(width: 720, height: 1280)
 
@@ -36,7 +40,9 @@ final class CameraDetector: NSObject, ObservableObject, AVCaptureVideoDataOutput
 
     // 아래 값들은 모두 queue 안에서만 읽고 쓴다
     private let queue = DispatchQueue(label: "camera.frames")
-    private var request: VNCoreMLRequest?
+    private var model: MLModel?
+    private var classLabels: [String] = []
+    private var modelInput: CVPixelBuffer?  // 모델 입력 크기(640x640)로 늘린 프레임. 매 프레임 같은 버퍼를 다시 쓴다
     private var lastFrameTime = CACurrentMediaTime()
     private var smoothFps = 0.0
     private var smoothInferenceMs = 0.0
@@ -48,6 +54,13 @@ final class CameraDetector: NSObject, ObservableObject, AVCaptureVideoDataOutput
     private var lastDepth: AVDepthData?
     private var lastDepthTime: CFTimeInterval = 0
     private let depthMaxAge: CFTimeInterval = 0.1
+    // 보행 모드
+    private var walkMode = false
+    private let obstacles = ObstacleDetector()
+    private let motion = CMMotionManager()
+    private var shake: Double = 0  // 휴대폰 흔들림(중력 뺀 가속도, g)의 지수 평균. 걷는 중인지 어림한다
+    private let walkingShake = 0.05
+    private var fovTan: Float = 0  // 사진 긴 변 화각 절반의 tan. LiDAR 형식을 고를 때 정해진다
 
     // 저장: 앱을 켤 때마다 새 세션. 파일 이름 앞부분(app날짜-시각)이 02/04 스크립트의 "영상 이름" 역할을 한다
     private let saveInterval: CFTimeInterval = 0.5
@@ -59,20 +72,9 @@ final class CameraDetector: NSObject, ObservableObject, AVCaptureVideoDataOutput
     private let documents = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
     private var framesDir: URL { documents.appendingPathComponent("frames") }
 
-    /// 모델 안의 NMS가 읽는 임계값. 앱에서 바꾸면 다음 프레임부터 적용된다.
-    private final class Thresholds: NSObject, MLFeatureProvider {
-        var confidence = 0.25
-        var iou = 0.45
-        var featureNames: Set<String> { ["confidenceThreshold", "iouThreshold"] }
-        func featureValue(for name: String) -> MLFeatureValue? {
-            switch name {
-            case "confidenceThreshold": MLFeatureValue(double: confidence)
-            case "iouThreshold": MLFeatureValue(double: iou)
-            default: nil
-            }
-        }
-    }
-    private let thresholds = Thresholds()
+    /// 새 물건으로 보여줄 최소 확신도 (화면 슬라이더). 이미 보이던 물건은 이보다 낮아도 Tracker가 조금 더 붙잡는다
+    private var confidence = 0.25
+    private let iou = 0.45
 
     func start() {
         queue.async { [weak self] in
@@ -90,7 +92,7 @@ final class CameraDetector: NSObject, ObservableObject, AVCaptureVideoDataOutput
     }
 
     func setConfidence(_ value: Double) {
-        queue.async { self.thresholds.confidence = value }
+        queue.async { self.confidence = value }
     }
 
     /// 저장을 잠깐 멈추거나 다시 시작한다 (화면 인식은 계속된다).
@@ -99,6 +101,20 @@ final class CameraDetector: NSObject, ObservableObject, AVCaptureVideoDataOutput
             self.recording.toggle()
             let now = self.recording
             DispatchQueue.main.async { self.isRecording = now }
+        }
+    }
+
+    /// 보행 모드를 켜고 끈다. 켜져 있는 동안만 중력 센서를 읽는다.
+    func setWalkMode(_ on: Bool) {
+        queue.async {
+            self.walkMode = on
+            if on {
+                self.motion.deviceMotionUpdateInterval = 1.0 / 60
+                self.motion.startDeviceMotionUpdates()
+            } else {
+                self.motion.stopDeviceMotionUpdates()
+                DispatchQueue.main.async { self.walkReport = nil }
+            }
         }
     }
 
@@ -168,12 +184,54 @@ final class CameraDetector: NSObject, ObservableObject, AVCaptureVideoDataOutput
     private func setUpModel() throws {
         let config = MLModelConfiguration()
         config.computeUnits = .all  // Neural Engine을 쓸 수 있으면 쓴다
-        let vnModel = try VNCoreMLModel(for: Detector(configuration: config).model)
-        vnModel.featureProvider = thresholds
-        let request = VNCoreMLRequest(model: vnModel)
-        // 학습 때와 같은 정사각형 입력으로 늘려 넣는다. Vision이 박스를 원래 사진 좌표로 되돌려준다.
-        request.imageCropAndScaleOption = .scaleFill
-        self.request = request
+        let model = try Detector(configuration: config).model
+        // 내보낼 때 클래스 이름이 80개로 채워진다 (30번부터는 "30", "31" 같은 빈칸이고 점수는 늘 0)
+        classLabels = model.modelDescription.classLabels as? [String] ?? []
+        guard let image = model.modelDescription.inputDescriptionsByName["image"]?.imageConstraint else {
+            throw NSError(domain: "firstCV", code: 2, userInfo: [NSLocalizedDescriptionKey: "모델 입력 형식을 읽을 수 없어요"])
+        }
+        var buffer: CVPixelBuffer?
+        CVPixelBufferCreate(nil, image.pixelsWide, image.pixelsHigh, kCVPixelFormatType_32BGRA,
+                            [kCVPixelBufferIOSurfacePropertiesKey: [:]] as CFDictionary, &buffer)
+        modelInput = buffer
+        self.model = model
+    }
+
+    /// 프레임을 모델 입력 크기의 정사각형으로 늘려 넣고 결과를 받는다.
+    /// 비율을 유지하지 않고 늘리지만 정확도 차이는 작고(검증 mAP50 0.284 → 0.277), 박스 좌표를 그대로 쓸 수 있다.
+    private func detect(_ pixelBuffer: CVPixelBuffer) -> [Detection] {
+        guard let model, let input = modelInput else { return [] }
+        let frame = CIImage(cvPixelBuffer: pixelBuffer)
+        let sx = CGFloat(CVPixelBufferGetWidth(input)) / frame.extent.width
+        let sy = CGFloat(CVPixelBufferGetHeight(input)) / frame.extent.height
+        ciContext.render(frame.transformed(by: CGAffineTransform(scaleX: sx, y: sy)), to: input)
+
+        // 모델 안 NMS는 Tracker가 붙잡을 수 있게 슬라이더보다 낮은 점수까지 넘겨준다
+        guard let features = try? MLDictionaryFeatureProvider(dictionary: [
+            "image": MLFeatureValue(pixelBuffer: input),
+            "confidenceThreshold": MLFeatureValue(double: confidence * Tracker.keepRatio),
+            "iouThreshold": MLFeatureValue(double: iou),
+        ]), let out = try? model.prediction(from: features),
+              let scores = out.featureValue(for: "confidence")?.multiArrayValue,
+              let coords = out.featureValue(for: "coordinates")?.multiArrayValue
+        else { return [] }
+
+        let count = scores.shape[0].intValue, classes = scores.shape[1].intValue
+        let rowStride = scores.strides[0].intValue, coordStride = coords.strides[0].intValue
+        let s = scores.dataPointer.assumingMemoryBound(to: Float32.self)
+        let c = coords.dataPointer.assumingMemoryBound(to: Float32.self)
+        var detections: [Detection] = []
+        for i in 0..<count {
+            var best = 0
+            for k in 1..<classes where s[i * rowStride + k] > s[i * rowStride + best] { best = k }
+            guard best < classLabels.count else { continue }
+            // 좌표는 0~1의 (가운데 x, 가운데 y, 너비, 높이)이고 원점은 왼쪽 위
+            let (x, y, w, h) = (CGFloat(c[i * coordStride]), CGFloat(c[i * coordStride + 1]),
+                                CGFloat(c[i * coordStride + 2]), CGFloat(c[i * coordStride + 3]))
+            detections.append(Detection(label: classLabels[best], confidence: s[i * rowStride + best],
+                                        rect: CGRect(x: x - w / 2, y: y - h / 2, width: w, height: h)))
+        }
+        return detections
     }
 
     private func setUpCamera() throws {
@@ -224,6 +282,7 @@ final class CameraDetector: NSObject, ObservableObject, AVCaptureVideoDataOutput
                 < CMVideoFormatDescriptionGetDimensions($1.formatDescription).width })
         else { return false }
 
+        fovTan = Float(tan(Double(format.videoFieldOfView) / 2 * .pi / 180))  // 가로 센서 기준이라 긴 변 화각이다
         session.sessionPreset = .inputPriority
         try device.lockForConfiguration()
         device.activeFormat = format
@@ -254,8 +313,8 @@ final class CameraDetector: NSObject, ObservableObject, AVCaptureVideoDataOutput
         process(sampleBuffer, depth: nil)
     }
 
-    /// 박스 가운데 40% 영역의 깊이 중앙값(m). 가장자리는 뒤쪽 배경이 섞여서 뺀다.
-    private func distance(of rect: CGRect, in depthData: AVDepthData) -> Float? {
+    /// 깊이 지도를 잠근 채로 body를 부른다. body에는 세로 사진 좌표(0~1)의 깊이(m)를 읽는 함수를 넘긴다.
+    private func withDepthMap<T>(_ depthData: AVDepthData, _ body: (_ sample: (CGFloat, CGFloat) -> Float?) -> T) -> T? {
         let depth = depthData.depthDataType == kCVPixelFormatType_DepthFloat32
             ? depthData : depthData.converting(toDepthDataType: kCVPixelFormatType_DepthFloat32)
         let map = depth.depthDataMap
@@ -265,56 +324,83 @@ final class CameraDetector: NSObject, ObservableObject, AVCaptureVideoDataOutput
         let w = CVPixelBufferGetWidth(map), h = CVPixelBufferGetHeight(map)
         let rowBytes = CVPixelBufferGetBytesPerRow(map)
         let portrait = h > w  // 깊이 지도도 세로로 돌아왔는지. 아니면 센서 원래 방향(가로)이다
-
-        let inner = rect.insetBy(dx: rect.width * 0.3, dy: rect.height * 0.3)
-        var values: [Float] = []
-        let steps = 8
-        for i in 0..<steps {
-            for j in 0..<steps {
-                let px = inner.minX + inner.width * (CGFloat(i) + 0.5) / CGFloat(steps)
-                let py = inner.minY + inner.height * (CGFloat(j) + 0.5) / CGFloat(steps)
-                // 세로 화면 (x, y)는 시계방향 90도 돌리기 전 가로 센서에서 (y, 1 - x)
-                let (sx, sy) = portrait ? (px, py) : (py, 1 - px)
-                let x = min(max(Int(sx * CGFloat(w)), 0), w - 1)
-                let y = min(max(Int(sy * CGFloat(h)), 0), h - 1)
-                let v = base.advanced(by: y * rowBytes).assumingMemoryBound(to: Float32.self)[x]
-                if v.isFinite && v > 0 { values.append(v) }
-            }
+        return body { px, py in
+            // 세로 화면 (x, y)는 시계방향 90도 돌리기 전 가로 센서에서 (y, 1 - x)
+            let (sx, sy) = portrait ? (px, py) : (py, 1 - px)
+            let x = min(max(Int(sx * CGFloat(w)), 0), w - 1)
+            let y = min(max(Int(sy * CGFloat(h)), 0), h - 1)
+            let v = base.advanced(by: y * rowBytes).assumingMemoryBound(to: Float32.self)[x]
+            return v.isFinite && v > 0 ? v : nil
         }
-        guard values.count >= steps else { return nil }
-        values.sort()
-        return values[values.count / 2]
+    }
+
+    /// 박스 가운데 40% 영역의 깊이 중앙값(m). 가장자리는 뒤쪽 배경이 섞여서 뺀다.
+    private func distance(of rect: CGRect, in depthData: AVDepthData) -> Float? {
+        withDepthMap(depthData) { sample -> Float? in
+            let inner = rect.insetBy(dx: rect.width * 0.3, dy: rect.height * 0.3)
+            var values: [Float] = []
+            let steps = 8
+            for i in 0..<steps {
+                for j in 0..<steps {
+                    let px = inner.minX + inner.width * (CGFloat(i) + 0.5) / CGFloat(steps)
+                    let py = inner.minY + inner.height * (CGFloat(j) + 0.5) / CGFloat(steps)
+                    if let v = sample(px, py) { values.append(v) }
+                }
+            }
+            guard values.count >= steps else { return nil }
+            values.sort()
+            return values[values.count / 2]
+        } ?? nil
+    }
+
+    /// 걷는 길의 장애물과 낙차. 그 위치를 덮는 탐지 박스 중 가장 작은 것의 이름을 붙인다 (큰 박스는 뒤쪽 배경일 수 있다).
+    private func scanPath(in depthData: AVDepthData, size: CGSize, shown: [Detection]) -> PathReport? {
+        // 기기 좌표(오른쪽 x, 위 y, 화면 밖 z) → 후면 카메라 좌표(오른쪽 x, 아래 y, 앞 z)
+        guard fovTan > 0, let m = motion.deviceMotion else { return nil }
+        let a = m.userAcceleration
+        shake = shake * 0.95 + (a.x * a.x + a.y * a.y + a.z * a.z).squareRoot() * 0.05
+        let gravity = SIMD3<Float>(Float(m.gravity.x), Float(-m.gravity.y), Float(-m.gravity.z))
+        let found = withDepthMap(depthData) { sample in
+            obstacles.update(gravity: gravity, fovTan: fovTan, aspect: Float(size.width / size.height), sample: sample)
+        } ?? nil
+        guard var report = found else { return nil }
+        func label(at point: CGPoint) -> String? {
+            shown.filter { $0.rect.contains(point) }
+                .min(by: { $0.rect.width * $0.rect.height < $1.rect.width * $1.rect.height })?.label
+        }
+        if let o = report.obstacle { report.obstacle?.label = label(at: o.point) }
+        if let d = report.drop { report.drop?.label = label(at: d.point) }
+        report.walking = shake > walkingShake
+        return report
     }
 
     private func process(_ sampleBuffer: CMSampleBuffer, depth: AVDepthData?) {
-        guard let request, let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
+        guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
         let size = CGSize(width: CVPixelBufferGetWidth(pixelBuffer), height: CVPixelBufferGetHeight(pixelBuffer))
         if size != lastFrameSize {
             lastFrameSize = size
             DispatchQueue.main.async { self.frameSize = size }
         }
         let start = CACurrentMediaTime()
-        try? VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: .up).perform([request])
+        var detections = detect(pixelBuffer)
         let end = CACurrentMediaTime()
-
-        let results = (request.results as? [VNRecognizedObjectObservation]) ?? []
-        let detections = results.compactMap { obs -> Detection? in
-            guard let top = obs.labels.first else { return nil }
-            let b = obs.boundingBox  // Vision은 왼쪽 아래가 원점이라 위아래를 뒤집는다
-            let rect = CGRect(x: b.minX, y: 1 - b.maxY, width: b.width, height: b.height)
-            return Detection(label: top.identifier, confidence: top.confidence, rect: rect,
-                             distance: depth.flatMap { distance(of: rect, in: $0) })
+        if let depth {
+            for i in detections.indices { detections[i].distance = distance(of: detections[i].rect, in: depth) }
         }
         // 숫자가 덜 흔들리게 지수 평균
         smoothFps = smoothFps * 0.9 + 1 / max(end - lastFrameTime, 1e-3) * 0.1
         smoothInferenceMs = smoothInferenceMs * 0.9 + (end - start) * 1000 * 0.1
         lastFrameTime = end
-        saveFrameIfNeeded(pixelBuffer, at: end, detections: detections)  // 기록은 추적 전 원래 결과로
-        let shown = tracker.update(detections)
+        // 기록은 추적 전 원래 결과로. 슬라이더 기준을 넘은 것만 남겨 예전 기록과 같은 의미로 둔다
+        saveFrameIfNeeded(pixelBuffer, at: end, detections: detections.filter { Double($0.confidence) >= confidence })
+        let shown = tracker.update(detections, minConfidence: Float(confidence), at: end)
+        let report = walkMode ? depth.flatMap { scanPath(in: $0, size: size, shown: shown) } : nil
 
         let fps = smoothFps, inferenceMs = smoothInferenceMs
+        let walking = walkMode
         DispatchQueue.main.async {
             self.detections = shown
+            if walking { self.walkReport = report }  // detections 다음에 넣어야 WalkGuide가 이번 프레임 박스를 본다
             self.fps = fps
             self.inferenceMs = inferenceMs
         }

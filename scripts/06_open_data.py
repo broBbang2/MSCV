@@ -7,7 +7,8 @@ LVIS는 Hugging Face(finedet/lvis, 19.6GB)에 사진과 함께 올라와 있지�
 사진은 COCO 서버에서 필요한 것만 받는다. LVIS 사진은 원래 COCO 사진이라 COCO 라벨도 함께 붙인다.
 
 결과는 data/datasets/open/에, 내 영상 데이터와 합친 설정은 data/datasets/mine_open.yaml에 저장된다.
-val은 내 영상(mine/images/val)만 쓴다. 우리가 잘해야 하는 건 공개 사진이 아니라 내 카메라 화면이기 때문이다.
+val은 내 영상(mine/images/val)이 기준이다. 우리가 잘해야 하는 건 공개 사진이 아니라 내 카메라 화면이기 때문이다.
+다만 보행용 클래스(문, 계단, 차 등)는 내 영상 val에 거의 없어서, 공개 사진의 10%를 open/images/val로 떼어 함께 잰다.
 
 실행 예:
     uv run scripts/06_open_data.py                  # 클래스당 최대 200장
@@ -27,6 +28,7 @@ import shutil
 import socket
 import urllib.request
 import zipfile
+import zlib
 from collections import Counter, defaultdict
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
@@ -57,27 +59,39 @@ COCO_MAP = {
     "tv": "monitor", "laptop": "laptop", "keyboard": "keyboard", "bottle": "bottle",
     "mouse": "mouse", "cell phone": "phone", "cup": "cup", "backpack": "backpack", "chair": "chair",
     "couch": "sofa", "person": "person",
+    "bicycle": "bicycle", "car": "car", "bus": "car", "truck": "car", "motorcycle": "motorcycle",
+    "bench": "bench", "dining table": "table",
 }
 OI_MAP = {
     "Computer monitor": "monitor", "Headphones": "headphones", "Footwear": "shoes", "Doll": "figure",
     "Hat": "cap", "Mug": "cup", "Coffee cup": "cup",
+    "Door": "door", "Stairs": "stairs", "Bicycle": "bicycle", "Car": "car", "Bus": "car", "Truck": "car",
+    "Motorcycle": "motorcycle", "Street light": "pole", "Table": "table", "Waste container": "trash can",
+    "Bench": "bench",
 }
 # 셔츠·재킷은 넣지 않는다. 사람이 입은 옷까지 clothes로 배우면 사람만 비춰도 옷 박스가 생긴다.
 LVIS_MAP = {
     "figurine": "figure", "speaker_(stero_equipment)": "speaker", "baseball_cap": "cap",
     "cap_(headwear)": "cap", "shoe": "shoes", "jersey": "clothes", "headset": "headphones",
     "earphone": "headphones",
+    "pole": "pole", "lamppost": "pole", "telephone_pole": "pole", "trash_can": "trash can",
+    "cone": "traffic cone", "motor_scooter": "motorcycle",
 }
 MAX_SIDE = 1024  # 디스크를 아끼려고 긴 변을 이 크기로 줄여서 저장한다
 MIN_BOX = 0.01  # 가로나 세로가 사진의 1%보다 작은 박스는 버린다
+VAL_EVERY = 10  # 공개 사진 10장 중 1장(파일 이름으로 정해서 매번 같다)은 채점용
 
 
-def our_classes() -> dict[str, list[str]]:
-    """04_auto_label.py의 CLASSES(클래스 → YOLOE 이름들)를 그대로 가져온다."""
+def split_of(key: str) -> str:
+    return "val" if zlib.crc32(key.encode()) % VAL_EVERY == 0 else "train"
+
+
+def auto_label():
+    """04_auto_label.py (CLASSES: 클래스 → YOLOE 이름들, 선생님 설정 함수)를 그대로 가져온다."""
     spec = importlib.util.spec_from_file_location("auto_label", ROOT / "scripts" / "04_auto_label.py")
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
-    return mod.CLASSES
+    return mod
 
 
 def fetch(url: str, path: Path) -> Path:
@@ -118,7 +132,7 @@ def to_box(c: str, x: float, y: float, w: float, h: float, img_w: int, img_h: in
     return (c, x / img_w, y / img_h, (x + w) / img_w, (y + h) / img_h)
 
 
-def lvis_items(coco: dict[str, dict], per_class: int, rng: random.Random) -> list[dict]:
+def lvis_items(coco: dict[str, dict], per_class: int, seed: int) -> list[dict]:
     """Hugging Face의 LVIS에서 라벨 열만 읽어 고르고, 같은 사진의 COCO 라벨을 합친다."""
     fs = HfFileSystem()
     cat_path = fetch(f"https://huggingface.co/{LVIS_REPO}/resolve/main/categories.csv", CACHE / "lvis_categories.csv")
@@ -150,16 +164,16 @@ def lvis_items(coco: dict[str, dict], per_class: int, rng: random.Random) -> lis
         if boxes:
             base = coco.get(name, {"url": f"http://images.cocodataset.org/train2017/{name}", "boxes": []})
             items[f"coco_{Path(name).stem}"] = {"url": base["url"], "boxes": boxes + base["boxes"]}
-    return pick(items, set(LVIS_MAP.values()), per_class, rng, covered=set(LVIS_MAP.values()) | set(COCO_MAP.values()))
+    return pick(items, set(LVIS_MAP.values()), per_class, seed, covered=set(LVIS_MAP.values()) | set(COCO_MAP.values()))
 
 
-def coco_items(coco: dict[str, dict], per_class: int, rng: random.Random, skip: set[str]) -> list[dict]:
+def coco_items(coco: dict[str, dict], per_class: int, seed: int, skip: set[str]) -> list[dict]:
     """COCO에서 클래스마다 최대 per_class장. LVIS에서 이미 고른 사진은 뺀다."""
     items = {f"coco_{Path(n).stem}": it for n, it in coco.items() if f"coco_{Path(n).stem}" not in skip}
-    return pick(items, set(COCO_MAP.values()), per_class, rng, covered=set(COCO_MAP.values()))
+    return pick(items, set(COCO_MAP.values()), per_class, seed, covered=set(COCO_MAP.values()))
 
 
-def oi_items(per_class: int, rng: random.Random) -> list[dict]:
+def oi_items(per_class: int, seed: int) -> list[dict]:
     """Open Images validation/test에서 클래스마다 최대 per_class장을 고른다. 그림·묶음 박스는 뺀다."""
     names = {r[0]: r[1] for r in csv.reader(fetch(OI_CLASSES_URL, CACHE / "oidv7-class-descriptions-boxable.csv").open())}
     items = {}
@@ -174,12 +188,14 @@ def oi_items(per_class: int, rng: random.Random) -> list[dict]:
             key = f"oi_{r['ImageID']}"
             items.setdefault(key, {"url": OI_IMAGE_URL.format(split=split, id=r["ImageID"]), "boxes": []})
             items[key]["boxes"].append((ours, x1, y1, x2, y2))
-    return pick(items, set(OI_MAP.values()), per_class, rng, covered=set(OI_MAP.values()))
+    return pick(items, set(OI_MAP.values()), per_class, seed, covered=set(OI_MAP.values()))
 
 
-def pick(items: dict[str, dict], classes: set[str], per_class: int, rng: random.Random,
+def pick(items: dict[str, dict], classes: set[str], per_class: int, seed: int,
          covered: set[str]) -> list[dict]:
     """클래스마다 그 클래스가 있는 사진을 무작위로 최대 per_class장 고른다 (사진 중복은 한 번만).
+
+    난수는 클래스마다 따로 둔다. 클래스를 새로 더해도 기존 클래스가 고른 사진이 바뀌지 않아 다시 받지 않는다.
 
     covered는 이 사진들에서 사람이 라벨을 단 클래스. 나머지 클래스는 선생님이 채운다.
     """
@@ -190,16 +206,19 @@ def pick(items: dict[str, dict], classes: set[str], per_class: int, rng: random.
     chosen = set()
     for c in sorted(classes):
         keys = sorted(by_class[c])
-        rng.shuffle(keys)
+        random.Random(f"{seed}:{c}").shuffle(keys)
         chosen.update(keys[:per_class])
     return [{"key": k, "covered": covered, **items[k]} for k in sorted(chosen)]
 
 
 def download(item: dict) -> Path | None:
     """사진을 받아 긴 변을 MAX_SIDE로 줄여 저장한다. 실패하면 None."""
-    out = OUT_DIR / "images" / "train" / f"{item['key']}.jpg"
+    out = OUT_DIR / "images" / split_of(item["key"]) / f"{item['key']}.jpg"
     if out.exists():
         return out
+    other = OUT_DIR / "images" / ("train" if out.parent.name == "val" else "val") / out.name
+    if other.exists():  # val을 나누기 전에 받은 사진
+        return other.rename(out)
     try:
         tmp = out.with_suffix(".part")
         urllib.request.urlretrieve(item["url"], tmp)
@@ -225,27 +244,30 @@ def main() -> None:
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--mine-repeat", type=int, default=4,
                         help="학습 목록에 내 영상을 몇 번 넣을지. 공개 사진에 묻히지 않게 비중을 높인다")
+    parser.add_argument("--download-only", action="store_true",
+                        help="사진만 받고 라벨은 만들지 않는다 (프로토타입을 만들기 전에 사진부터 받아 둘 때)")
     args = parser.parse_args()
     # 타임아웃이 없으면 서버가 응답 없이 연결만 붙잡고 있을 때 다운로드 스레드가 영원히 멈춘다
     socket.setdefaulttimeout(60)
 
-    classes = our_classes()
+    auto = auto_label()
+    classes = auto.CLASSES
+    prototypes = auto.load_prototypes()
     names = list(classes)
-    rng = random.Random(args.seed)
     coco = coco_all()
-    lvis = lvis_items(coco, args.per_class, rng)
+    lvis = lvis_items(coco, args.per_class, args.seed)
     sources = {
         "lvis": lvis,
-        "coco": coco_items(coco, args.per_class, rng, skip={it["key"] for it in lvis}),
-        "oi": oi_items(args.per_class, rng),
+        "coco": coco_items(coco, args.per_class, args.seed, skip={it["key"] for it in lvis}),
+        "oi": oi_items(args.per_class, args.seed),
     }
 
     # 예전 실행의 라벨과 사진을 지우고 새로 만든다 (사진은 이번에 고른 것만 남긴다)
     keep = {it["key"] for items in sources.values() for it in items}
     shutil.rmtree(OUT_DIR / "labels", ignore_errors=True)
-    for sub in ("images/train", "labels/train"):
+    for sub in ("images/train", "images/val", "labels/train", "labels/val"):
         (OUT_DIR / sub).mkdir(parents=True, exist_ok=True)
-    for old in (OUT_DIR / "images" / "train").glob("*.jpg"):
+    for old in (OUT_DIR / "images").glob("*/*.jpg"):
         if old.stem not in keep:
             old.unlink()
 
@@ -255,12 +277,12 @@ def main() -> None:
         print(f"{src}: {len(items)}장 받는 중")
         with ThreadPoolExecutor(16) as pool:
             paths = list(pool.map(download, items))
+        if args.download_only:
+            continue
 
         # 이 데이터셋에서 사람이 라벨을 달지 않은 클래스만 선생님에게 맡긴다
         fill = [c for c in names if c not in items[0]["covered"]] if items else []
-        prompts = [p for c in fill for p in classes[c]]
-        prompt_to_class = [c for c in fill for _ in classes[c]]
-        teacher.set_classes(prompts)
+        prompt_to_class = auto.set_teacher(teacher, {c: classes[c] for c in fill}, [], prototypes).tolist()
 
         for item, path in zip(items, paths):
             if path is None:
@@ -271,18 +293,17 @@ def main() -> None:
                 counts[f"{c} ({src})"] += 1
             r = teacher.predict(str(path), conf=args.conf, verbose=False)[0].boxes
             for (cx, cy, w, h), p in zip(r.xywhn.tolist(), r.cls.int().tolist()):
-                c = prompt_to_class[p]
+                c = names[prompt_to_class[p]]
                 lines.append(f"{names.index(c)} {cx:.6f} {cy:.6f} {w:.6f} {h:.6f}")
                 counts[f"{c} (선생님)"] += 1
-            (OUT_DIR / "labels" / "train" / f"{path.stem}.txt").write_text("\n".join(lines))
+            (OUT_DIR / "labels" / path.parent.name / f"{path.stem}.txt").write_text("\n".join(lines))
             n_img += 1
 
-    mine = yaml.safe_load((DATASETS_DIR / "mine.yaml").read_text())
     merged = {
         "path": str(DATASETS_DIR),
         "train": ["mine/images/train"] * args.mine_repeat + ["open/images/train"],
-        "val": "mine/images/val",
-        "names": mine["names"],
+        "val": ["mine/images/val", "open/images/val"],
+        "names": dict(enumerate(names)),  # mine.yaml은 04를 다시 돌리기 전엔 예전 목록일 수 있다
     }
     (DATASETS_DIR / "mine_open.yaml").write_text(yaml.safe_dump(merged, allow_unicode=True, sort_keys=False))
     print(f"공개 데이터 {n_img}장 준비 완료 → {OUT_DIR}")

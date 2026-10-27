@@ -26,6 +26,8 @@ from ultralytics import YOLOE
 ROOT = Path(__file__).resolve().parents[1]
 RAW_DIR = ROOT / "data" / "raw"
 OUT_DIR = ROOT / "data" / "datasets" / "mine"
+# 10_prototypes.py가 채점해서 고른 클래스별 프로토타입. 있으면 그 클래스는 글자와 예시를 함께 준다
+PROTOTYPES = ROOT / "data" / "prototypes" / "teacher.pt"
 
 # 채점에만 쓰고 학습에는 절대 넣지 않는 영상 (이름이 test_로 시작하는 영상도 같은 취급)
 VAL_VIDEOS = {"촬영본"}
@@ -57,15 +59,51 @@ CLASSES = {
     # 처음엔 물건만 골랐는데, 사람이 없으면 공개 사진 속 수천 명이 "배경"으로 학습돼 사람을 적극적으로 무시하게 된다.
     # 맨 뒤에 붙여서 기존 클래스 번호는 그대로 둔다.
     "person": ["person"],
+    # 보행 보조용 (2026-10-27). 걷는 길에서 부딪히거나 넘어질 수 있는 것들. 역시 맨 뒤에 붙인다.
+    "door": ["door", "glass door"],
+    "stairs": ["stairs", "staircase", "steps"],
+    "bicycle": ["bicycle"],
+    "car": ["car", "truck", "bus", "van"],
+    "motorcycle": ["motorcycle", "motor scooter"],
+    "pole": ["pole", "bollard", "street light", "lamp post", "utility pole"],
+    "table": ["table", "desk", "dining table"],
+    "trash can": ["trash can", "garbage bin", "waste basket"],
+    "bench": ["bench"],
+    "traffic cone": ["traffic cone"],
 }
 
 # 우리 클래스는 아니지만 자주 헷갈리는 물건. 선생님이 침대를 소파로, 리모컨을 휴대폰으로 억지로 맞추지 않게
 # 같이 찾게 한 뒤 라벨에서는 버린다. 사람은 이제 진짜 클래스라 여기 넣지 않는다.
 # (헷갈림용으로 넣었을 땐 피규어가 사람으로 흡수돼 AP50 0.77 → 0.33. 지금은 clean()의 겹침 정리가
 # 같은 물체에 person과 figure가 함께 붙으면 점수 높은 쪽만 남긴다.)
+# table·desk·door는 보행용 클래스가 되어 뺐다.
 DISTRACTORS = ["bed", "pillow", "blanket", "remote control", "power strip", "cable", "box",
-               "table", "desk", "door", "curtain", "plant", "lamp"]
+               "curtain", "plant", "lamp"]
 SCREEN_CONTAINED = 0.85  # 모니터 박스 안에 이 비율 이상 들어간 박스는 화면 속 장면으로 보고 버린다
+
+
+def load_prototypes() -> dict[str, torch.Tensor]:
+    return torch.load(PROTOTYPES) if PROTOTYPES.exists() else {}
+
+
+def set_teacher(model: YOLOE, classes: dict[str, list[str]], distractors: list[str],
+                prototypes: dict[str, torch.Tensor]) -> torch.Tensor:
+    """선생님에게 찾을 이름(과 프로토타입)을 넣고, 결과 번호 → CLASSES 번호 표를 돌려준다 (헷갈림용은 -1).
+
+    classes는 CLASSES의 일부여도 된다 (06_open_data.py는 공개 데이터에 라벨이 없는 클래스만 채운다).
+    """
+    names = list(CLASSES)
+    prompts = [p for ps in classes.values() for p in ps] + distractors
+    prompt_to_class = [names.index(c) for c, ps in classes.items() for _ in ps] + [-1] * len(distractors)
+    pe = model.get_text_pe(prompts)
+    labels = list(prompts)
+    extra = [c for c in classes if c in prototypes]
+    if extra:
+        pe = torch.cat([pe, torch.stack([prototypes[c] for c in extra])[None].to(pe.device, pe.dtype)], dim=1)
+        labels += [f"<{c} 프로토타입>" for c in extra]
+        prompt_to_class += [names.index(c) for c in extra]
+    model.set_classes(labels, pe)
+    return torch.tensor(prompt_to_class)
 
 
 def predict_rotated(model: YOLOE, frame, conf: float) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
@@ -135,12 +173,12 @@ def main() -> None:
     args = parser.parse_args()
 
     names = list(CLASSES)
-    prompts = [p for ps in CLASSES.values() for p in ps] + DISTRACTORS
-    # 헷갈림용 이름은 -1로 표시했다가 나중에 버린다
-    prompt_to_class = torch.tensor([names.index(c) for c, ps in CLASSES.items() for _ in ps] + [-1] * len(DISTRACTORS))
-
     model = YOLOE(args.model)
-    model.set_classes(prompts)
+    prototypes = load_prototypes()
+    if prototypes:
+        print(f"프로토타입 함께 사용: {', '.join(prototypes)}")
+    # 헷갈림용 이름은 -1로 표시했다가 나중에 버린다
+    prompt_to_class = set_teacher(model, CLASSES, DISTRACTORS, prototypes)
 
     paths = sorted(RAW_DIR.glob("*.jpg"))
     if not paths:
