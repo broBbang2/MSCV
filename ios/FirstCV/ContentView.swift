@@ -34,7 +34,10 @@ struct ContentView: View {
             }
         }
         .overlay(alignment: .bottom) { controls }
-        .onAppear { detector.start() }
+        .onAppear {
+            detector.start()
+            walk.onEvent = { [detector] in detector.logWalkEvent($0) }
+        }
         .onReceive(detector.$detections) { voice.update($0) }  // 매 프레임 넘겨주고, 말할지는 VoiceGuide가 정한다
         .onReceive(detector.$walkReport) { walk.update($0, detections: detector.detections) }
     }
@@ -123,6 +126,16 @@ struct ContentView: View {
                     Text(walk.isOn ? "보행 모드 켜짐 (장애물·낙차·다가오는 물체)" : "보행 모드")
                 }
                 .tint(.yellow)
+                if walk.isOn {
+                    // 경고 없이 부딪히거나 걸려 넘어질 뻔했을 때 누른다 (맥에서 놓친 장애물로 센다)
+                    Button { walk.markMissed() } label: {
+                        Label("경고 놓침 기록" + (walk.missedCount > 0 ? " (\(walk.missedCount))" : ""),
+                              systemImage: "flag.fill")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(.purple)
+                }
             }
             Toggle(isOn: $voice.isOn) {
                 Text(voice.isOn ? "음성 안내 켜짐 (확신도 70%↑, 3m 이내)" : "음성 안내")

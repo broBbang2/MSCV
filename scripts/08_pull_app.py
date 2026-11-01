@@ -6,6 +6,8 @@
   3. 가져간 프레임 목록(pulled.txt)을 앱에 넣어 둔다. 앱을 다음에 켤 때 그 프레임들을 지운다
      (devicectl로는 기기 파일을 지울 수 없어서 앱이 대신 지운다)
   4. 04_auto_label.py를 다시 돌려 data/datasets/mine/에 반영한다. 학습은 하지 않는다.
+보행 모드의 경고 기록(walk_events/: 경고마다 사진 + csv)은 data/walk_events/로 가져온다. 학습에는 쓰지 않고
+11_walk_review.py로 맞는 경고였는지 검토해 지표를 낸다.
 
 앱 켤 때마다 저장되는 묶음(app날짜-시각)이 영상 하나처럼 취급된다.
 
@@ -32,6 +34,7 @@ import cv2
 ROOT = Path(__file__).resolve().parents[1]
 RAW_DIR = ROOT / "data" / "raw"
 LOG_DIR = ROOT / "data" / "app_logs"
+EVENTS_DIR = ROOT / "data" / "walk_events"
 BUNDLE_ID = "dev.breeadee.firstcv"
 
 
@@ -123,12 +126,20 @@ def pull(device: str, min_change: float = 6.0, label: bool = True) -> int:
         for log in sorted(docs.glob("*app*.csv")):  # 시험용 묶음은 test_app...으로 시작한다
             shutil.copy2(log, LOG_DIR / log.name)  # 앱이 계속 덧붙이므로 매번 최신으로 덮어쓴다
 
-        # 휴대폰에 있는 프레임은 전부 맥에 있으니 다음 실행 때 지워도 된다
+        events = sorted((docs / "walk_events").glob("*.jpg"))
+        if (docs / "walk_events").is_dir():
+            EVENTS_DIR.mkdir(parents=True, exist_ok=True)
+            for f in (docs / "walk_events").iterdir():  # csv는 앱이 계속 덧붙이므로 매번 최신으로 덮어쓴다
+                shutil.copy2(f, EVENTS_DIR / f.name)
+
+        # 휴대폰에 있는 프레임·경고 사진은 전부 맥에 있으니 다음 실행 때 지워도 된다
         pulled = Path(tmp) / "pulled.txt"
-        pulled.write_text("\n".join(f.name for f in frames))
+        pulled.write_text("\n".join([f.name for f in frames] + [f"walk_events/{f.name}" for f in events]))
         devicectl("device", "copy", "to", *app_domain(device), "--source", str(pulled),
                   "--destination", "Documents/pulled.txt")
 
+    if events:
+        print(f"보행 경고 사진 {len(events)}장 → {EVENTS_DIR}  (uv run scripts/11_walk_review.py로 검토)")
     sessions = sorted({f.name.rsplit("_", 1)[0] for f in new})
     print(f"새 프레임 {len(new)}장 → {RAW_DIR}  "
           f"(휴대폰에 있던 {len(frames)}장 중 새것 {len(fresh)}장, 직전 사진과 거의 같은 {len(fresh) - len(new)}장 제외)")

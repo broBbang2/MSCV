@@ -13,3 +13,6 @@ ios/FirstCV/*.mlpackage
 ios/build/
 data/app_logs/
 data/prototypes/
+data/aihub/
+tools/aihub/
+logs/

@@ -7,6 +7,7 @@ import UIKit
 /// 낙차(꺼진 곳): 넘어지면 더 위험해서 3m 주의, 2m 경고, 1m 멈춤. "앞 1.5미터 내려가는 계단"
 /// 다가오는 사람·자전거·차·오토바이: 내 걷는 속도를 빼고도 1초에 0.7m 넘게 다가오고 3초 안에 닿으면
 ///   "오른쪽에서 자전거 다가와요". 같은 물체는 5초에 한 번만.
+/// 경고할 때마다 onEvent로 기록을 넘긴다 (CameraDetector가 그 순간 사진과 함께 저장).
 /// 거리는 프레임마다 흔들리므로 섞어서 쓰고, 단계가 내려갈 때는 10cm 여유를 둔다 (경계에서 왔다 갔다 하지 않게).
 @MainActor
 final class WalkGuide: ObservableObject {
@@ -52,17 +53,20 @@ final class WalkGuide: ObservableObject {
     @Published private(set) var obstacle: Obstacle?
     @Published private(set) var drop: Drop?
     @Published private(set) var approaching: Detection?
+    @Published private(set) var missedCount = 0
+    var onEvent: ((WalkEvent) -> Void)?
 
     private var obstacleState = Hazard(caution: 2.0, warn: 1.2, stop: 0.6)
     private var dropState = Hazard(caution: 3.0, warn: 2.0, stop: 1.0)
     private let hysteresis: Float = 0.1
-    private let repeatSpeech: TimeInterval = 4
+    private let repeatSpeech: TimeInterval = 4  // 말이 끝나고 이만큼 조용해야 같은 단계 경고를 다시 말한다
     private let lostAfter: TimeInterval = 0.3  // 이만큼 안 보이면 없어졌다고 본다
 
     // 다가오는 물체
     private let movers: Set<String> = ["person", "bicycle", "car", "motorcycle"]
     /// 스스로 움직이지 않는 물건. 이것들이 가까워지는 속도 = 내가 걷는 속도
-    private let fixed: Set<String> = ["chair", "table", "door", "pole", "bench", "trash can", "traffic cone", "sofa", "stairs"]
+    private let fixed: Set<String> = ["chair", "table", "door", "pole", "bench", "trash can", "traffic cone", "sofa", "stairs",
+                                      "bollard", "tree trunk"]
     private let assumedWalkSpeed: Float = 1.4  // 고정된 물건이 안 보일 때 걷는 중이면 이 속도로 어림한다
     private let minOwnSpeed: Float = 0.7
     private let maxTimeToReach: Float = 3
@@ -74,7 +78,7 @@ final class WalkGuide: ObservableObject {
     private let light = UIImpactFeedbackGenerator(style: .light)
     private let heavy = UIImpactFeedbackGenerator(style: .heavy)
     private var lastBuzz = Date.distantPast
-    private var lastSpeech = Date.distantPast
+    private var walking = false
 
     init(voice: VoiceGuide) {
         self.voice = voice
@@ -83,6 +87,7 @@ final class WalkGuide: ObservableObject {
     func update(_ report: PathReport?, detections: [Detection]) {
         guard isOn else { return }
         let now = Date()
+        walking = report?.walking ?? false
         if let o = report?.obstacle { obstacle = o }
         if let d = report?.drop { drop = d }
         obstacleState.update(report?.obstacle?.distance, now: now, lostAfter: lostAfter, hysteresis: hysteresis)
@@ -99,23 +104,40 @@ final class WalkGuide: ObservableObject {
         case .clear, .caution: break
         }
 
-        if level >= .warn, level > previous || now.timeIntervalSince(lastSpeech) >= repeatSpeech {
+        let escalated = level > previous
+        if level >= .warn, escalated || voice.silence >= repeatSpeech {
             // 같은 단계면 낙차를 먼저 말한다
-            let sentence = dropState.level >= obstacleState.level ? drop.map(describe) : obstacle.map(describe)
-            if let sentence {
-                voice.warn(level == .stop ? "멈추세요, " + sentence : sentence)
-                lastSpeech = now
+            let isDrop = dropState.level >= obstacleState.level
+            let sentence = isDrop ? drop.map(describe) : obstacle.map(describe)
+            // 단계가 올라간 첫 경고만 하던 말을 끊을 수 있고, 반복은 조용할 때만 나온다
+            let priority: VoiceGuide.Priority = escalated ? (level == .stop ? .stop : .warn) : .notice
+            if let sentence, voice.warn(level == .stop ? "멈추세요, " + sentence : sentence, priority: priority) {
+                onEvent?(WalkEvent(kind: isDrop ? "drop" : "obstacle", level: level == .stop ? "stop" : "warn",
+                                   distance: isDrop ? dropState.distance : obstacleState.distance,
+                                   label: isDrop ? drop?.label : obstacle?.label,
+                                   point: isDrop ? drop?.point : obstacle?.point,
+                                   repeated: level <= previous, walking: walking))
             }
-        } else if level < .stop, let mover = approachingMover(in: detections, walking: report?.walking ?? false, now: now) {
-            // 멈춰야 할 만큼 가까운 장애물이 없을 때만 다가오는 물체를 말한다
+        } else if level < .stop, let mover = approachingMover(in: detections, walking: report?.walking ?? false, now: now),
+                  voice.warn("\(direction(of: mover))에서 \(KoreanLabels.name(for: mover.label)) 다가와요", priority: .notice) {
+            // 멈춰야 할 만큼 가까운 장애물이 없을 때만 다가오는 물체를 말한다. 경고를 말하는 중이면 끝난 뒤에
             approaching = mover
             announced[mover.id] = now
             heavy.impactOccurred()
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { self.heavy.impactOccurred() }  // 두 번 = 다가오는 것
-            voice.warn("\(direction(of: mover))에서 \(KoreanLabels.name(for: mover.label)) 다가와요")
-            lastSpeech = now
+            onEvent?(WalkEvent(kind: "approach", distance: mover.distance, label: mover.label,
+                               point: CGPoint(x: mover.rect.midX, y: mover.rect.midY), speed: mover.approachSpeed,
+                               walking: walking))
         }
         if let a = approaching, !detections.contains(where: { $0.id == a.id }) { approaching = nil }
+    }
+
+    /// 경고가 없었는데 부딪히거나 걸려 넘어질 뻔했을 때 사용자가 누른다. 놓친 장애물 수를 세는 기준이 된다.
+    func markMissed() {
+        missedCount += 1
+        heavy.impactOccurred()
+        onEvent?(WalkEvent(kind: "missed", distance: obstacleState.distance, label: obstacle?.label,
+                           point: obstacle?.point, walking: walking))
     }
 
     /// 내 걷는 속도를 빼고도 빠르게 다가와 곧 닿을 사람·탈것 중 가장 먼저 닿을 것.

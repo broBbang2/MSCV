@@ -65,12 +65,22 @@ CLASSES = {
     "bicycle": ["bicycle"],
     "car": ["car", "truck", "bus", "van"],
     "motorcycle": ["motorcycle", "motor scooter"],
-    "pole": ["pole", "bollard", "street light", "lamp post", "utility pole"],
+    "pole": ["pole", "street light", "lamp post", "utility pole"],
     "table": ["table", "desk", "dining table"],
     "trash can": ["trash can", "garbage bin", "waste basket"],
     "bench": ["bench"],
     "traffic cone": ["traffic cone"],
+    # 한국 인도용 (2026-10-30). AI Hub 인도보행 영상에 사람 라벨이 있다. 볼라드는 기둥에서 떼어 따로 부른다.
+    # 점자블록·횡단보도는 바닥 무늬라 박스가 넓고 납작하다 (AI Hub 바닥 폴리곤을 감싼 박스).
+    "bollard": ["bollard", "short traffic post"],
+    "tree trunk": ["tree trunk", "street tree"],
+    "braille block": ["tactile paving", "yellow tactile paving", "braille block"],
+    "crosswalk": ["crosswalk", "zebra crossing"],
 }
+# 선생님이 못 찾는 클래스. 사람 라벨(AI Hub 바닥 폴리곤)만 쓴다.
+# 2026-10-30 AI Hub 검증 사진에서 선생님 AP50: 점자블록 0.05, 횡단보도 0.03 (프로토타입을 줘도 0.05, 0.11).
+# 점자블록이라며 인도 전체·배수구·도로를 잡았다.
+HUMAN_ONLY = {"braille block", "crosswalk"}
 
 # 우리 클래스는 아니지만 자주 헷갈리는 물건. 선생님이 침대를 소파로, 리모컨을 휴대폰으로 억지로 맞추지 않게
 # 같이 찾게 한 뒤 라벨에서는 버린다. 사람은 이제 진짜 클래스라 여기 넣지 않는다.
@@ -93,6 +103,7 @@ def set_teacher(model: YOLOE, classes: dict[str, list[str]], distractors: list[s
     classes는 CLASSES의 일부여도 된다 (06_open_data.py는 공개 데이터에 라벨이 없는 클래스만 채운다).
     """
     names = list(CLASSES)
+    classes = {c: ps for c, ps in classes.items() if c not in HUMAN_ONLY}
     prompts = [p for ps in classes.values() for p in ps] + distractors
     prompt_to_class = [names.index(c) for c, ps in classes.items() for _ in ps] + [-1] * len(distractors)
     pe = model.get_text_pe(prompts)

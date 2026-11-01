@@ -19,6 +19,7 @@ import argparse
 from pathlib import Path
 
 import torch
+import yaml
 from ultralytics import YOLO
 from ultralytics.utils.downloads import safe_download
 
@@ -107,6 +108,8 @@ def main() -> None:
         last = RUNS_DIR / args.name / "weights" / "last.pt"
         print(f"resume from {last}")
         YOLO(last).train(resume=True)
+        # 마지막 검증도 처음 학습한 데이터셋으로 한다 (--data를 안 줘서 기본값으로 검증되는 걸 막는다)
+        data = Path(yaml.safe_load((RUNS_DIR / args.name / "args.yaml").read_text())["data"])
     else:
         hyp = {**HYPERPARAMS, "optimizer": args.optimizer, "lr0": args.lr0, "patience": args.patience}
         print(f"device={device}  data={data}  model={args.model}")

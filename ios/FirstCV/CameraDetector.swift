@@ -3,6 +3,18 @@ import CoreImage
 import CoreML
 import CoreMotion
 
+/// 보행 모드가 울린 경고 하나 (또는 사용자가 누른 "놓침"). 맥에서 맞는 경고였는지 검토해 지표를 낸다.
+struct WalkEvent {
+    let kind: String  // obstacle(솟은 장애물) / drop(낙차) / approach(다가오는 물체) / missed(경고 없이 부딪힐 뻔함)
+    var level = ""  // warn / stop. approach·missed는 빈칸
+    var distance: Float?
+    var label: String?
+    var point: CGPoint?  // 경고한 위치 (사진 좌표 0~1)
+    var speed: Float?  // approach일 때 1초에 몇 m씩 다가오는지
+    var repeated = false  // 같은 단계에서 4초마다 다시 말한 것 (처음 경고와 따로 센다)
+    var walking = false
+}
+
 /// 화면에 그릴 탐지 결과 하나. rect는 사진 기준 0~1 좌표이고 원점은 왼쪽 위.
 struct Detection: Identifiable {
     var id = UUID()  // Tracker가 같은 물건에는 같은 id를 붙인다
@@ -60,6 +72,7 @@ final class CameraDetector: NSObject, ObservableObject, AVCaptureVideoDataOutput
     private let motion = CMMotionManager()
     private var shake: Double = 0  // 휴대폰 흔들림(중력 뺀 가속도, g)의 지수 평균. 걷는 중인지 어림한다
     private let walkingShake = 0.05
+    private static let floorLabels: Set<String> = ["braille block", "crosswalk"]
     private var fovTan: Float = 0  // 사진 긴 변 화각 절반의 tan. LiDAR 형식을 고를 때 정해진다
 
     // 저장: 앱을 켤 때마다 새 세션. 파일 이름 앞부분(app날짜-시각)이 02/04 스크립트의 "영상 이름" 역할을 한다
@@ -71,6 +84,11 @@ final class CameraDetector: NSObject, ObservableObject, AVCaptureVideoDataOutput
     private let ciContext = CIContext()
     private let documents = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
     private var framesDir: URL { documents.appendingPathComponent("frames") }
+    private var eventsDir: URL { documents.appendingPathComponent("walk_events") }
+    private var pendingEvents: [WalkEvent] = []  // 다음 프레임 사진과 함께 저장한다
+    private var eventHandle: FileHandle?
+    private var eventSession = ""
+    private var eventIndex = 0
 
     /// 새 물건으로 보여줄 최소 확신도 (화면 슬라이더). 이미 보이던 물건은 이보다 낮아도 Tracker가 조금 더 붙잡는다
     private var confidence = 0.25
@@ -125,8 +143,9 @@ final class CameraDetector: NSObject, ObservableObject, AVCaptureVideoDataOutput
         let list = documents.appendingPathComponent("pulled.txt")
         guard let text = try? String(contentsOf: list, encoding: .utf8) else { return }
         for name in text.split(separator: "\n") {
-            let file = name.hasSuffix(".csv") ? documents.appendingPathComponent(String(name))
-                                              : framesDir.appendingPathComponent(String(name))
+            // "walk_events/..."처럼 폴더가 붙은 이름은 Documents 기준, 아니면 frames 안의 사진
+            let file = name.hasSuffix(".csv") || name.contains("/") ? documents.appendingPathComponent(String(name))
+                                                                    : framesDir.appendingPathComponent(String(name))
             try? FileManager.default.removeItem(at: file)
         }
         try? FileManager.default.removeItem(at: list)
@@ -156,19 +175,58 @@ final class CameraDetector: NSObject, ObservableObject, AVCaptureVideoDataOutput
         _ = try? logHandle?.seekToEnd()
     }
 
+    /// LiDAR 카메라 형식은 1440x1920이라, 긴 변을 1280으로 줄여 예전 사진과 크기를 맞추고 용량도 줄인다
+    private func jpeg(_ pixelBuffer: CVPixelBuffer) -> Data? {
+        var image = CIImage(cvPixelBuffer: pixelBuffer)
+        let scale = min(1, 1280 / max(image.extent.width, image.extent.height))
+        if scale < 1 { image = image.transformed(by: CGAffineTransform(scaleX: scale, y: scale)) }
+        return ciContext.jpegRepresentation(
+            of: image, colorSpace: CGColorSpaceCreateDeviceRGB(),
+            options: [kCGImageDestinationLossyCompressionQuality as CIImageRepresentationOption: 0.9])
+    }
+
+    /// 보행 경고를 기록한다. 그 순간(바로 다음 프레임) 사진과 함께 walk_events/에 저장된다.
+    func logWalkEvent(_ event: WalkEvent) {
+        queue.async { self.pendingEvents.append(event) }
+    }
+
+    /// walk_events/<세션>.csv에 한 줄, 사진은 walk_events/<세션>_e0001.jpg. 학습용 frames와 섞이지 않게 따로 둔다
+    private func saveEvents(_ pixelBuffer: CVPixelBuffer) {
+        guard !pendingEvents.isEmpty else { return }
+        if eventSession != sessionName {
+            try? eventHandle?.close()
+            eventSession = sessionName
+            eventIndex = 0
+            try? FileManager.default.createDirectory(at: eventsDir, withIntermediateDirectories: true)
+            let log = eventsDir.appendingPathComponent("\(sessionName).csv")
+            if !FileManager.default.fileExists(atPath: log.path) {
+                FileManager.default.createFile(atPath: log.path, contents: Data(
+                    "image,time,kind,level,distance,label,x,y,speed,repeated,walking\n".utf8))
+            }
+            eventHandle = try? FileHandle(forWritingTo: log)
+            _ = try? eventHandle?.seekToEnd()
+        }
+        eventIndex += 1
+        let name = String(format: "%@_e%04d.jpg", sessionName, eventIndex)
+        guard let data = jpeg(pixelBuffer) else { return }
+        try? data.write(to: eventsDir.appendingPathComponent(name))
+        let stamp = ISO8601DateFormatter().string(from: Date())
+        func f(_ v: Float?) -> String { v.map { String(format: "%.2f", $0) } ?? "" }
+        for e in pendingEvents {
+            let fields = [name, stamp, e.kind, e.level, f(e.distance), e.label ?? "",
+                          e.point.map { String(format: "%.3f", $0.x) } ?? "", e.point.map { String(format: "%.3f", $0.y) } ?? "",
+                          f(e.speed), e.repeated ? "1" : "0", e.walking ? "1" : "0"]
+            try? eventHandle?.write(contentsOf: Data((fields.joined(separator: ",") + "\n").utf8))
+        }
+        pendingEvents.removeAll()
+    }
+
     private func saveFrameIfNeeded(_ pixelBuffer: CVPixelBuffer, at time: CFTimeInterval, detections: [Detection]) {
         guard recording, time - lastSaveTime >= saveInterval else { return }
         lastSaveTime = time
         frameIndex += 1
         let name = String(format: "%@_%06d.jpg", sessionName, frameIndex)
-        // LiDAR 카메라 형식은 1440x1920이라, 긴 변을 1280으로 줄여 예전 사진과 크기를 맞추고 용량도 줄인다
-        var image = CIImage(cvPixelBuffer: pixelBuffer)
-        let scale = min(1, 1280 / max(image.extent.width, image.extent.height))
-        if scale < 1 { image = image.transformed(by: CGAffineTransform(scaleX: scale, y: scale)) }
-        guard let jpeg = ciContext.jpegRepresentation(
-            of: image, colorSpace: CGColorSpaceCreateDeviceRGB(),
-            options: [kCGImageDestinationLossyCompressionQuality as CIImageRepresentationOption: 0.9])
-        else { return }
+        guard let jpeg = jpeg(pixelBuffer) else { return }
         try? jpeg.write(to: framesDir.appendingPathComponent(name))
         // 이름:확신도[@거리m]
         let labels = detections.map { d in
@@ -364,8 +422,9 @@ final class CameraDetector: NSObject, ObservableObject, AVCaptureVideoDataOutput
             obstacles.update(gravity: gravity, fovTan: fovTan, aspect: Float(size.width / size.height), sample: sample)
         } ?? nil
         guard var report = found else { return nil }
+        // 점자블록·횡단보도는 바닥 무늬라 그 위에 솟은 물건이나 꺼진 곳의 이름이 될 수 없다
         func label(at point: CGPoint) -> String? {
-            shown.filter { $0.rect.contains(point) }
+            shown.filter { $0.rect.contains(point) && !Self.floorLabels.contains($0.label) }
                 .min(by: { $0.rect.width * $0.rect.height < $1.rect.width * $1.rect.height })?.label
         }
         if let o = report.obstacle { report.obstacle?.label = label(at: o.point) }
@@ -393,6 +452,7 @@ final class CameraDetector: NSObject, ObservableObject, AVCaptureVideoDataOutput
         lastFrameTime = end
         // 기록은 추적 전 원래 결과로. 슬라이더 기준을 넘은 것만 남겨 예전 기록과 같은 의미로 둔다
         saveFrameIfNeeded(pixelBuffer, at: end, detections: detections.filter { Double($0.confidence) >= confidence })
+        saveEvents(pixelBuffer)
         let shown = tracker.update(detections, minConfidence: Float(confidence), at: end)
         let report = walkMode ? depth.flatMap { scanPath(in: $0, size: size, shown: shown) } : nil
 

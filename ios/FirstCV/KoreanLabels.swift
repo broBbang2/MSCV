@@ -33,6 +33,10 @@ enum KoreanLabels {
         "trash can": "쓰레기통",
         "bench": "벤치",
         "traffic cone": "라바콘",
+        "bollard": "볼라드",
+        "tree trunk": "가로수",
+        "braille block": "점자블록",
+        "crosswalk": "횡단보도",
     ]
 
     static func name(for label: String) -> String {

@@ -9,8 +9,15 @@ import Foundation
 /// - 같은 물건은 8초, 같은 종류는 4초 동안 다시 말하지 않는다
 /// - 말하는 중에는 새로 말하지 않고, 끝난 뒤에도 1.5초는 쉰다
 /// - 보행 모드의 장애물 경고(warn)가 가장 먼저다. 경고 뒤 3초는 물건 안내를 하지 않는다
+/// - 경고끼리는 더 급한 말만 하던 말을 끊는다. 같거나 덜 급하면 끝날 때까지 기다린다 (말이 겹치지 않게)
 @MainActor
 final class VoiceGuide: NSObject, ObservableObject, AVSpeechSynthesizerDelegate {
+    /// 물건 안내 < 반복 경고·다가오는 물체 < 새 경고 < 멈추세요
+    enum Priority: Int, Comparable {
+        case guide, notice, warn, stop
+        static func < (a: Priority, b: Priority) -> Bool { a.rawValue < b.rawValue }
+    }
+
     @Published var isOn = false {
         didSet {
             if !isOn { synthesizer.stopSpeaking(at: .immediate) }
@@ -32,7 +39,13 @@ final class VoiceGuide: NSObject, ObservableObject, AVSpeechSynthesizerDelegate 
     private var spokenLabels: [String: Date] = [:]
     private var lastSpeechEnd = Date.distantPast
     private var lastWarning = Date.distantPast
+    private var speakingPriority = Priority.guide
     private var audioReady = false
+
+    /// 마지막 말이 끝나고 조용했던 시간. 말하는 중이면 0
+    var silence: TimeInterval {
+        synthesizer.isSpeaking ? 0 : Date().timeIntervalSince(lastSpeechEnd)
+    }
 
     override init() {
         super.init()
@@ -57,19 +70,26 @@ final class VoiceGuide: NSObject, ObservableObject, AVSpeechSynthesizerDelegate 
         let sentence = describe(target)
         spokenObjects[target.id] = now
         spokenLabels[target.label] = now
-        speak(sentence)
+        speak(sentence, priority: .guide)
     }
 
-    /// 장애물 경고. 음성 안내 스위치와 상관없이, 하던 말을 끊고 바로 말한다.
-    func warn(_ sentence: String) {
-        synthesizer.stopSpeaking(at: .immediate)
+    /// 장애물 경고. 음성 안내 스위치와 상관없이 말한다.
+    /// 하던 말보다 급하면 끊고 바로 말하고, 아니면 건너뛰고 false를 돌려준다 (다음 프레임에 다시 시도하면 된다).
+    @discardableResult
+    func warn(_ sentence: String, priority: Priority) -> Bool {
+        if synthesizer.isSpeaking {
+            guard priority > speakingPriority else { return false }
+            synthesizer.stopSpeaking(at: .immediate)
+        }
         lastWarning = Date()
-        speak(sentence)
+        speak(sentence, priority: priority)
+        return true
     }
 
-    private func speak(_ sentence: String) {
+    private func speak(_ sentence: String, priority: Priority) {
         activateAudio()
         lastSentence = sentence
+        speakingPriority = priority
         let utterance = AVSpeechUtterance(string: sentence)
         utterance.voice = voice
         utterance.rate = 0.55  // 기본(0.5)보다 조금 빠르게

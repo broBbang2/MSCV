@@ -76,7 +76,7 @@ def install(run: str, device: str) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawTextHelpFormatter)
-    parser.add_argument("--epochs", type=int, default=15, help="지금까지 최고점이 10 epoch 근처라 15면 충분하다")
+    parser.add_argument("--epochs", type=int, default=30, help="클래스 30개(walk_s)는 20~30 epoch까지 점수가 올랐다. 깔린 모델과 같은 길이로 학습해야 비교가 공정하다")
     parser.add_argument("--model", default="yolo26s.pt")
     parser.add_argument("--no-install", action="store_true", help="더 나아도 아이폰에 설치하지 않는다")
     parser.add_argument("--force", action="store_true", help="새 데이터가 없어도 학습한다")
