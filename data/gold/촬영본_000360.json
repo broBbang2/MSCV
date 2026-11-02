@@ -1,0 +1,215 @@
+{
+  "version": "4.2.0",
+  "flags": {},
+  "checked": true,
+  "shapes": [
+    {
+      "label": "cup",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          579.47232,
+          822.45402
+        ],
+        [
+          1069.86528,
+          822.45402
+        ],
+        [
+          1069.86528,
+          1050.66774
+        ],
+        [
+          579.47232,
+          1050.66774
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "headphones",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          1567.82016,
+          692.0920800000001
+        ],
+        [
+          1919.96736,
+          692.0920800000001
+        ],
+        [
+          1919.96736,
+          1073.39472
+        ],
+        [
+          1567.82016,
+          1073.39472
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "tumbler",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          405.34272,
+          411.31206
+        ],
+        [
+          1313.18784,
+          411.31206
+        ],
+        [
+          1313.18784,
+          963.3529799999999
+        ],
+        [
+          405.34272,
+          963.3529799999999
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "book",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          964.0684799999999,
+          414.61902000000003
+        ],
+        [
+          1788.28992,
+          414.61902000000003
+        ],
+        [
+          1788.28992,
+          1079.99946
+        ],
+        [
+          964.0684799999999,
+          1079.99946
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "table",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          960.0,
+          432.0
+        ],
+        [
+          1574.4,
+          432.0
+        ],
+        [
+          1574.4,
+          1080.0
+        ],
+        [
+          960.0,
+          1080.0
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "book",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          80.03039999999997,
+          917.32716
+        ],
+        [
+          604.86048,
+          917.32716
+        ],
+        [
+          604.86048,
+          1079.6187599999998
+        ],
+        [
+          80.03039999999997,
+          1079.6187599999998
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    }
+  ],
+  "imagePath": "촬영본_000360.jpg",
+  "imageData": null,
+  "imageHeight": 1080,
+  "imageWidth": 1920,
+  "firstcv": {
+    "classes": [
+      "monitor",
+      "laptop",
+      "keyboard",
+      "tumbler",
+      "bottle",
+      "speaker",
+      "headphones",
+      "clothes",
+      "cap",
+      "mouse",
+      "phone",
+      "cup",
+      "shoes",
+      "backpack",
+      "chair",
+      "sofa",
+      "person",
+      "door",
+      "stairs",
+      "bicycle",
+      "car",
+      "motorcycle",
+      "pole",
+      "table",
+      "trash can",
+      "bench",
+      "traffic cone",
+      "bollard",
+      "tree trunk",
+      "braille block",
+      "crosswalk"
+    ],
+    "reviewed": "2026-11-02T13:47",
+    "reviewer": "Claude (화면 판독, 2026-11-02)",
+    "not_reviewed": [
+      "book",
+      "figure",
+      "toy car"
+    ]
+  }
+}

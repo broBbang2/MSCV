@@ -1,0 +1,134 @@
+{
+  "version": "4.2.0",
+  "flags": {},
+  "checked": true,
+  "shapes": [
+    {
+      "label": "door",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          0.0,
+          0.0009600000000276054
+        ],
+        [
+          553.16736,
+          0.0009600000000276054
+        ],
+        [
+          553.16736,
+          1877.75136
+        ],
+        [
+          0.0,
+          1877.75136
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "book",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          541.19502,
+          1175.0438399999998
+        ],
+        [
+          1079.99946,
+          1175.0438399999998
+        ],
+        [
+          1079.99946,
+          1625.32608
+        ],
+        [
+          541.19502,
+          1625.32608
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "figure",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          697.6886400000001,
+          965.3654399999998
+        ],
+        [
+          1006.79976,
+          965.3654399999998
+        ],
+        [
+          1006.79976,
+          1445.9702399999999
+        ],
+        [
+          697.6886400000001,
+          1445.9702399999999
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    }
+  ],
+  "imagePath": "녹화2_000987.jpg",
+  "imageData": null,
+  "imageHeight": 1920,
+  "imageWidth": 1080,
+  "firstcv": {
+    "classes": [
+      "monitor",
+      "laptop",
+      "keyboard",
+      "tumbler",
+      "bottle",
+      "speaker",
+      "headphones",
+      "clothes",
+      "cap",
+      "mouse",
+      "phone",
+      "cup",
+      "shoes",
+      "backpack",
+      "chair",
+      "sofa",
+      "person",
+      "door",
+      "stairs",
+      "bicycle",
+      "car",
+      "motorcycle",
+      "pole",
+      "table",
+      "trash can",
+      "bench",
+      "traffic cone",
+      "bollard",
+      "tree trunk",
+      "braille block",
+      "crosswalk"
+    ],
+    "reviewed": "2026-11-02T14:01",
+    "reviewer": "Claude (화면 판독, 2026-11-02)",
+    "not_reviewed": [
+      "book",
+      "figure",
+      "toy car"
+    ]
+  }
+}

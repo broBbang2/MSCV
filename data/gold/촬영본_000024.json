@@ -1,0 +1,161 @@
+{
+  "version": "4.2.0",
+  "flags": {},
+  "checked": true,
+  "shapes": [
+    {
+      "label": "laptop",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          1209.6,
+          0.0
+        ],
+        [
+          1209.6,
+          1080.0
+        ],
+        [
+          0.0,
+          1080.0
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "keyboard",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          1608.21504,
+          394.9317
+        ],
+        [
+          1920.0,
+          394.9317
+        ],
+        [
+          1920.0,
+          773.4554999999999
+        ],
+        [
+          1608.21504,
+          773.4554999999999
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "table",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          0.0,
+          162.0
+        ],
+        [
+          1920.0,
+          162.0
+        ],
+        [
+          1920.0,
+          1080.0
+        ],
+        [
+          0.0,
+          1080.0
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "figure",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          1618.02816,
+          1.8111600000000052
+        ],
+        [
+          1919.29152,
+          1.8111600000000052
+        ],
+        [
+          1919.29152,
+          85.96908
+        ],
+        [
+          1618.02816,
+          85.96908
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    }
+  ],
+  "imagePath": "촬영본_000024.jpg",
+  "imageData": null,
+  "imageHeight": 1080,
+  "imageWidth": 1920,
+  "firstcv": {
+    "classes": [
+      "monitor",
+      "laptop",
+      "keyboard",
+      "tumbler",
+      "bottle",
+      "speaker",
+      "headphones",
+      "clothes",
+      "cap",
+      "mouse",
+      "phone",
+      "cup",
+      "shoes",
+      "backpack",
+      "chair",
+      "sofa",
+      "person",
+      "door",
+      "stairs",
+      "bicycle",
+      "car",
+      "motorcycle",
+      "pole",
+      "table",
+      "trash can",
+      "bench",
+      "traffic cone",
+      "bollard",
+      "tree trunk",
+      "braille block",
+      "crosswalk"
+    ],
+    "reviewed": "2026-11-02T13:47",
+    "reviewer": "Claude (화면 판독, 2026-11-02)",
+    "not_reviewed": [
+      "book",
+      "figure",
+      "toy car"
+    ]
+  }
+}

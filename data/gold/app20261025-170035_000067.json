@@ -1,0 +1,107 @@
+{
+  "version": "4.2.0",
+  "flags": {},
+  "checked": true,
+  "shapes": [
+    {
+      "label": "toy car",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          306.58068,
+          311.02592000000004
+        ],
+        [
+          483.77052,
+          311.02592000000004
+        ],
+        [
+          483.77052,
+          539.0707199999999
+        ],
+        [
+          306.58068,
+          539.0707199999999
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "toy car",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          363.89556,
+          310.88320000000004
+        ],
+        [
+          432.67643999999996,
+          310.88320000000004
+        ],
+        [
+          432.67643999999996,
+          393.87712
+        ],
+        [
+          363.89556,
+          393.87712
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    }
+  ],
+  "imagePath": "app20261025-170035_000067.jpg",
+  "imageData": null,
+  "imageHeight": 1280,
+  "imageWidth": 720,
+  "firstcv": {
+    "classes": [
+      "monitor",
+      "laptop",
+      "keyboard",
+      "tumbler",
+      "bottle",
+      "speaker",
+      "headphones",
+      "clothes",
+      "cap",
+      "mouse",
+      "phone",
+      "cup",
+      "shoes",
+      "backpack",
+      "chair",
+      "sofa",
+      "person",
+      "door",
+      "stairs",
+      "bicycle",
+      "car",
+      "motorcycle",
+      "pole",
+      "table",
+      "trash can",
+      "bench",
+      "traffic cone",
+      "bollard",
+      "tree trunk",
+      "braille block",
+      "crosswalk"
+    ],
+    "reviewed": "2026-11-02T14:01",
+    "reviewer": "Claude (화면 판독, 2026-11-02)",
+    "not_reviewed": [
+      "book",
+      "figure",
+      "toy car"
+    ]
+  }
+}

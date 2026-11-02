@@ -1,0 +1,431 @@
+{
+  "version": "4.2.0",
+  "flags": {},
+  "checked": true,
+  "shapes": [
+    {
+      "label": "monitor",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          1427.2185600000003,
+          1.1507399999999968
+        ],
+        [
+          1919.9328,
+          1.1507399999999968
+        ],
+        [
+          1919.9328,
+          881.39286
+        ],
+        [
+          1427.2185600000003,
+          881.39286
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "speaker",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          1263.5760000000002,
+          266.69141999999994
+        ],
+        [
+          1644.85152,
+          266.69141999999994
+        ],
+        [
+          1644.85152,
+          815.90706
+        ],
+        [
+          1263.5760000000002,
+          815.90706
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "laptop",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          723.13824,
+          821.3054399999999
+        ],
+        [
+          1718.97888,
+          821.3054399999999
+        ],
+        [
+          1718.97888,
+          1080.0
+        ],
+        [
+          723.13824,
+          1080.0
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "backpack",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          153.65568000000002,
+          435.69575999999995
+        ],
+        [
+          449.84639999999996,
+          435.69575999999995
+        ],
+        [
+          449.84639999999996,
+          1078.18992
+        ],
+        [
+          153.65568000000002,
+          1078.18992
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "bottle",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          448.38912000000005,
+          8.169119999999987
+        ],
+        [
+          613.3555200000001,
+          8.169119999999987
+        ],
+        [
+          613.3555200000001,
+          372.67344
+        ],
+        [
+          448.38912000000005,
+          372.67344
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "bottle",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          646.83552,
+          46.864440000000016
+        ],
+        [
+          759.4608000000001,
+          46.864440000000016
+        ],
+        [
+          759.4608000000001,
+          394.06068
+        ],
+        [
+          646.83552,
+          394.06068
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "bottle",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          584.9087999999999,
+          66.02904
+        ],
+        [
+          674.0351999999999,
+          66.02904
+        ],
+        [
+          674.0351999999999,
+          380.32199999999995
+        ],
+        [
+          584.9087999999999,
+          380.32199999999995
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "sofa",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          51.90816000000001,
+          222.98922
+        ],
+        [
+          207.07296,
+          222.98922
+        ],
+        [
+          207.07296,
+          416.17206
+        ],
+        [
+          51.90816000000001,
+          416.17206
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "bottle",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          1338.7296,
+          202.81428
+        ],
+        [
+          1446.23808,
+          202.81428
+        ],
+        [
+          1446.23808,
+          269.60148
+        ],
+        [
+          1338.7296,
+          269.60148
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "book",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          84.74015999999999,
+          413.21448
+        ],
+        [
+          215.13696,
+          413.21448
+        ],
+        [
+          215.13696,
+          470.69640000000004
+        ],
+        [
+          84.74015999999999,
+          470.69640000000004
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "cup",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          1645.6972799999999,
+          739.51812
+        ],
+        [
+          1802.54208,
+          739.51812
+        ],
+        [
+          1802.54208,
+          947.889
+        ],
+        [
+          1645.6972799999999,
+          947.889
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "bottle",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          62.74752,
+          80.11331999999999
+        ],
+        [
+          96.28224,
+          80.11331999999999
+        ],
+        [
+          96.28224,
+          138.99924000000001
+        ],
+        [
+          62.74752,
+          138.99924000000001
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "cup",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          747.65184,
+          219.37122000000002
+        ],
+        [
+          837.57696,
+          219.37122000000002
+        ],
+        [
+          837.57696,
+          395.31510000000003
+        ],
+        [
+          747.65184,
+          395.31510000000003
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "book",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          500.56607999999994,
+          453.76578
+        ],
+        [
+          759.6144000000002,
+          453.76578
+        ],
+        [
+          759.6144000000002,
+          555.20694
+        ],
+        [
+          500.56607999999994,
+          555.20694
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    }
+  ],
+  "imagePath": "촬영본_000096.jpg",
+  "imageData": null,
+  "imageHeight": 1080,
+  "imageWidth": 1920,
+  "firstcv": {
+    "classes": [
+      "monitor",
+      "laptop",
+      "keyboard",
+      "tumbler",
+      "bottle",
+      "speaker",
+      "headphones",
+      "clothes",
+      "cap",
+      "mouse",
+      "phone",
+      "cup",
+      "shoes",
+      "backpack",
+      "chair",
+      "sofa",
+      "person",
+      "door",
+      "stairs",
+      "bicycle",
+      "car",
+      "motorcycle",
+      "pole",
+      "table",
+      "trash can",
+      "bench",
+      "traffic cone",
+      "bollard",
+      "tree trunk",
+      "braille block",
+      "crosswalk"
+    ],
+    "reviewed": "2026-11-02T13:47",
+    "reviewer": "Claude (화면 판독, 2026-11-02)",
+    "not_reviewed": [
+      "book",
+      "figure",
+      "toy car"
+    ]
+  }
+}

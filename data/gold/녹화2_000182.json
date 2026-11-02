@@ -1,0 +1,269 @@
+{
+  "version": "4.2.0",
+  "flags": {},
+  "checked": true,
+  "shapes": [
+    {
+      "label": "laptop",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          0.0,
+          595.2
+        ],
+        [
+          831.6,
+          595.2
+        ],
+        [
+          831.6,
+          1920.0
+        ],
+        [
+          0.0,
+          1920.0
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "keyboard",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          827.2665000000001,
+          922.8854399999999
+        ],
+        [
+          1079.85582,
+          922.8854399999999
+        ],
+        [
+          1079.85582,
+          1212.57696
+        ],
+        [
+          827.2665000000001,
+          1212.57696
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "figure",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          825.5628,
+          560.7878400000001
+        ],
+        [
+          1077.41448,
+          560.7878400000001
+        ],
+        [
+          1077.41448,
+          719.49504
+        ],
+        [
+          825.5628,
+          719.49504
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "bottle",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          0.2861999999999977,
+          491.49888000000004
+        ],
+        [
+          43.47324,
+          491.49888000000004
+        ],
+        [
+          43.47324,
+          681.8016
+        ],
+        [
+          0.2861999999999977,
+          681.8016
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "table",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          0.0,
+          783.8620799999999
+        ],
+        [
+          1080.0,
+          783.8620799999999
+        ],
+        [
+          1080.0,
+          1920.00096
+        ],
+        [
+          0.0,
+          1920.00096
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "speaker",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          1.8613799999999994,
+          33.00191999999999
+        ],
+        [
+          63.44837999999999,
+          33.00191999999999
+        ],
+        [
+          63.44837999999999,
+          162.14688
+        ],
+        [
+          1.8613799999999994,
+          162.14688
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "speaker",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          0.0,
+          8.666880000000035
+        ],
+        [
+          138.68063999999998,
+          8.666880000000035
+        ],
+        [
+          138.68063999999998,
+          472.8768
+        ],
+        [
+          0.0,
+          472.8768
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "speaker",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          0.00054000000000054,
+          257.1071999999999
+        ],
+        [
+          130.78314,
+          257.1071999999999
+        ],
+        [
+          130.78314,
+          474.47040000000004
+        ],
+        [
+          0.00054000000000054,
+          474.47040000000004
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    }
+  ],
+  "imagePath": "녹화2_000182.jpg",
+  "imageData": null,
+  "imageHeight": 1920,
+  "imageWidth": 1080,
+  "firstcv": {
+    "classes": [
+      "monitor",
+      "laptop",
+      "keyboard",
+      "tumbler",
+      "bottle",
+      "speaker",
+      "headphones",
+      "clothes",
+      "cap",
+      "mouse",
+      "phone",
+      "cup",
+      "shoes",
+      "backpack",
+      "chair",
+      "sofa",
+      "person",
+      "door",
+      "stairs",
+      "bicycle",
+      "car",
+      "motorcycle",
+      "pole",
+      "table",
+      "trash can",
+      "bench",
+      "traffic cone",
+      "bollard",
+      "tree trunk",
+      "braille block",
+      "crosswalk"
+    ],
+    "reviewed": "2026-11-02T14:01",
+    "reviewer": "Claude (화면 판독, 2026-11-02)",
+    "not_reviewed": [
+      "book",
+      "figure",
+      "toy car"
+    ]
+  }
+}

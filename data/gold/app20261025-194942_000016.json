@@ -1,0 +1,107 @@
+{
+  "version": "4.2.0",
+  "flags": {},
+  "checked": true,
+  "shapes": [
+    {
+      "label": "chair",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          628.8624,
+          273.00608
+        ],
+        [
+          718.65792,
+          273.00608
+        ],
+        [
+          718.65792,
+          487.90272000000004
+        ],
+        [
+          628.8624,
+          487.90272000000004
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "person",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          608.8589999999999,
+          169.82336
+        ],
+        [
+          710.65044,
+          169.82336
+        ],
+        [
+          710.65044,
+          438.1510400000001
+        ],
+        [
+          608.8589999999999,
+          438.1510400000001
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    }
+  ],
+  "imagePath": "app20261025-194942_000016.jpg",
+  "imageData": null,
+  "imageHeight": 1280,
+  "imageWidth": 720,
+  "firstcv": {
+    "classes": [
+      "monitor",
+      "laptop",
+      "keyboard",
+      "tumbler",
+      "bottle",
+      "speaker",
+      "headphones",
+      "clothes",
+      "cap",
+      "mouse",
+      "phone",
+      "cup",
+      "shoes",
+      "backpack",
+      "chair",
+      "sofa",
+      "person",
+      "door",
+      "stairs",
+      "bicycle",
+      "car",
+      "motorcycle",
+      "pole",
+      "table",
+      "trash can",
+      "bench",
+      "traffic cone",
+      "bollard",
+      "tree trunk",
+      "braille block",
+      "crosswalk"
+    ],
+    "reviewed": "2026-11-02T14:01",
+    "reviewer": "Claude (화면 판독, 2026-11-02)",
+    "not_reviewed": [
+      "book",
+      "figure",
+      "toy car"
+    ]
+  }
+}

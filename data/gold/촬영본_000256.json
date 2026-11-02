@@ -1,0 +1,215 @@
+{
+  "version": "4.2.0",
+  "flags": {},
+  "checked": true,
+  "shapes": [
+    {
+      "label": "monitor",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          0.1603200000000271,
+          0.0005400000000155281
+        ],
+        [
+          911.79744,
+          0.0005400000000155281
+        ],
+        [
+          911.79744,
+          959.8235400000001
+        ],
+        [
+          0.1603200000000271,
+          959.8235400000001
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "speaker",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          864.0,
+          421.2
+        ],
+        [
+          1075.2,
+          421.2
+        ],
+        [
+          1075.2,
+          972.0
+        ],
+        [
+          864.0,
+          972.0
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "bottle",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          785.4911999999999,
+          871.92234
+        ],
+        [
+          854.1580799999999,
+          871.92234
+        ],
+        [
+          854.1580799999999,
+          1046.9093400000002
+        ],
+        [
+          785.4911999999999,
+          1046.9093400000002
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "bottle",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          727.15776,
+          887.73624
+        ],
+        [
+          799.31904,
+          887.73624
+        ],
+        [
+          799.31904,
+          1066.3704
+        ],
+        [
+          727.15776,
+          1066.3704
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "tumbler",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          1620.02304,
+          941.5180799999999
+        ],
+        [
+          1914.7584,
+          941.5180799999999
+        ],
+        [
+          1914.7584,
+          1077.78384
+        ],
+        [
+          1620.02304,
+          1077.78384
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "table",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          135.17472,
+          905.86296
+        ],
+        [
+          1189.9977599999997,
+          905.86296
+        ],
+        [
+          1189.9977599999997,
+          1080.0
+        ],
+        [
+          135.17472,
+          1080.0
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    }
+  ],
+  "imagePath": "촬영본_000256.jpg",
+  "imageData": null,
+  "imageHeight": 1080,
+  "imageWidth": 1920,
+  "firstcv": {
+    "classes": [
+      "monitor",
+      "laptop",
+      "keyboard",
+      "tumbler",
+      "bottle",
+      "speaker",
+      "headphones",
+      "clothes",
+      "cap",
+      "mouse",
+      "phone",
+      "cup",
+      "shoes",
+      "backpack",
+      "chair",
+      "sofa",
+      "person",
+      "door",
+      "stairs",
+      "bicycle",
+      "car",
+      "motorcycle",
+      "pole",
+      "table",
+      "trash can",
+      "bench",
+      "traffic cone",
+      "bollard",
+      "tree trunk",
+      "braille block",
+      "crosswalk"
+    ],
+    "reviewed": "2026-11-02T13:47",
+    "reviewer": "Claude (화면 판독, 2026-11-02)",
+    "not_reviewed": [
+      "book",
+      "figure",
+      "toy car"
+    ]
+  }
+}

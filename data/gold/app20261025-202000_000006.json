@@ -1,0 +1,242 @@
+{
+  "version": "4.2.0",
+  "flags": {},
+  "checked": true,
+  "shapes": [
+    {
+      "label": "table",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          551.3529599999999,
+          1042.11776
+        ],
+        [
+          960.0,
+          1042.11776
+        ],
+        [
+          960.0,
+          1279.9968
+        ],
+        [
+          551.3529599999999,
+          1279.9968
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "cap",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          427.38576,
+          0.0
+        ],
+        [
+          515.52432,
+          0.0
+        ],
+        [
+          515.52432,
+          66.82112000000001
+        ],
+        [
+          427.38576,
+          66.82112000000001
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "clothes",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          284.91071999999997,
+          0.0
+        ],
+        [
+          660.87552,
+          0.0
+        ],
+        [
+          660.87552,
+          482.88
+        ],
+        [
+          284.91071999999997,
+          482.88
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "backpack",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          780.39072,
+          536.4576000000001
+        ],
+        [
+          932.46816,
+          536.4576000000001
+        ],
+        [
+          932.46816,
+          1071.88544
+        ],
+        [
+          780.39072,
+          1071.88544
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "door",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          240.0,
+          0.0
+        ],
+        [
+          854.4,
+          0.0
+        ],
+        [
+          854.4,
+          1036.8
+        ],
+        [
+          240.0,
+          1036.8
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "door",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          0.1963199999999965,
+          4.754560000000012
+        ],
+        [
+          239.41776,
+          4.754560000000012
+        ],
+        [
+          239.41776,
+          1011.8700799999999
+        ],
+        [
+          0.1963199999999965,
+          1011.8700799999999
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "book",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          290.39088,
+          85.93408
+        ],
+        [
+          320.37456,
+          85.93408
+        ],
+        [
+          320.37456,
+          201.71008
+        ],
+        [
+          290.39088,
+          201.71008
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    }
+  ],
+  "imagePath": "app20261025-202000_000006.jpg",
+  "imageData": null,
+  "imageHeight": 1280,
+  "imageWidth": 960,
+  "firstcv": {
+    "classes": [
+      "monitor",
+      "laptop",
+      "keyboard",
+      "tumbler",
+      "bottle",
+      "speaker",
+      "headphones",
+      "clothes",
+      "cap",
+      "mouse",
+      "phone",
+      "cup",
+      "shoes",
+      "backpack",
+      "chair",
+      "sofa",
+      "person",
+      "door",
+      "stairs",
+      "bicycle",
+      "car",
+      "motorcycle",
+      "pole",
+      "table",
+      "trash can",
+      "bench",
+      "traffic cone",
+      "bollard",
+      "tree trunk",
+      "braille block",
+      "crosswalk"
+    ],
+    "reviewed": "2026-11-02T14:01",
+    "reviewer": "Claude (화면 판독, 2026-11-02)",
+    "not_reviewed": [
+      "book",
+      "figure",
+      "toy car"
+    ]
+  }
+}

@@ -1,0 +1,215 @@
+{
+  "version": "4.2.0",
+  "flags": {},
+  "checked": true,
+  "shapes": [
+    {
+      "label": "laptop",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          405.2889600000001,
+          0.0
+        ],
+        [
+          1917.26592,
+          0.0
+        ],
+        [
+          1917.26592,
+          1080.0
+        ],
+        [
+          405.2889600000001,
+          1080.0
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "monitor",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          0.0,
+          1.587599999999999
+        ],
+        [
+          263.62752,
+          1.587599999999999
+        ],
+        [
+          263.62752,
+          358.08696000000003
+        ],
+        [
+          0.0,
+          358.08696000000003
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "figure",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          1763.09952,
+          147.58254
+        ],
+        [
+          1919.89824,
+          147.58254
+        ],
+        [
+          1919.89824,
+          372.00114
+        ],
+        [
+          1763.09952,
+          372.00114
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "cup",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          335.93664,
+          0.6296400000000002
+        ],
+        [
+          600.86592,
+          0.6296400000000002
+        ],
+        [
+          600.86592,
+          125.54676
+        ],
+        [
+          335.93664,
+          125.54676
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "speaker",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          0.9043199999999985,
+          233.8092
+        ],
+        [
+          349.56096,
+          233.8092
+        ],
+        [
+          349.56096,
+          522.33552
+        ],
+        [
+          0.9043199999999985,
+          522.33552
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "table",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          384.0,
+          0.0
+        ],
+        [
+          1920.0,
+          0.0
+        ],
+        [
+          1920.0,
+          1080.0
+        ],
+        [
+          384.0,
+          1080.0
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    }
+  ],
+  "imagePath": "촬영본_000536.jpg",
+  "imageData": null,
+  "imageHeight": 1080,
+  "imageWidth": 1920,
+  "firstcv": {
+    "classes": [
+      "monitor",
+      "laptop",
+      "keyboard",
+      "tumbler",
+      "bottle",
+      "speaker",
+      "headphones",
+      "clothes",
+      "cap",
+      "mouse",
+      "phone",
+      "cup",
+      "shoes",
+      "backpack",
+      "chair",
+      "sofa",
+      "person",
+      "door",
+      "stairs",
+      "bicycle",
+      "car",
+      "motorcycle",
+      "pole",
+      "table",
+      "trash can",
+      "bench",
+      "traffic cone",
+      "bollard",
+      "tree trunk",
+      "braille block",
+      "crosswalk"
+    ],
+    "reviewed": "2026-11-02T13:47",
+    "reviewer": "Claude (화면 판독, 2026-11-02)",
+    "not_reviewed": [
+      "book",
+      "figure",
+      "toy car"
+    ]
+  }
+}

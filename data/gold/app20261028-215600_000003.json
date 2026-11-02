@@ -1,0 +1,269 @@
+{
+  "version": "4.2.0",
+  "flags": {},
+  "checked": true,
+  "shapes": [
+    {
+      "label": "person",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          736.5499199999999,
+          464.12992
+        ],
+        [
+          759.38544,
+          464.12992
+        ],
+        [
+          759.38544,
+          521.77216
+        ],
+        [
+          736.5499199999999,
+          521.77216
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "person",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          922.7472,
+          462.6048
+        ],
+        [
+          953.61504,
+          462.6048
+        ],
+        [
+          953.61504,
+          533.01504
+        ],
+        [
+          922.7472,
+          533.01504
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "person",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          768.06192,
+          462.40128000000004
+        ],
+        [
+          798.34128,
+          462.40128000000004
+        ],
+        [
+          798.34128,
+          526.85184
+        ],
+        [
+          768.06192,
+          526.85184
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "motorcycle",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          260.37216,
+          483.3696
+        ],
+        [
+          307.55616000000003,
+          483.3696
+        ],
+        [
+          307.55616000000003,
+          548.7584
+        ],
+        [
+          260.37216,
+          548.7584
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "person",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          756.87408,
+          463.67807999999997
+        ],
+        [
+          776.7163200000001,
+          463.67807999999997
+        ],
+        [
+          776.7163200000001,
+          524.49472
+        ],
+        [
+          756.87408,
+          524.49472
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "car",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          295.14768,
+          447.83872
+        ],
+        [
+          475.99728,
+          447.83872
+        ],
+        [
+          475.99728,
+          533.0432000000001
+        ],
+        [
+          295.14768,
+          533.0432000000001
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "person",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          815.82816,
+          462.86272
+        ],
+        [
+          835.32384,
+          462.86272
+        ],
+        [
+          835.32384,
+          524.61632
+        ],
+        [
+          815.82816,
+          524.61632
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "crosswalk",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          0.0,
+          588.8
+        ],
+        [
+          960.0,
+          588.8
+        ],
+        [
+          960.0,
+          1280.0
+        ],
+        [
+          0.0,
+          1280.0
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    }
+  ],
+  "imagePath": "app20261028-215600_000003.jpg",
+  "imageData": null,
+  "imageHeight": 1280,
+  "imageWidth": 960,
+  "firstcv": {
+    "classes": [
+      "monitor",
+      "laptop",
+      "keyboard",
+      "tumbler",
+      "bottle",
+      "speaker",
+      "headphones",
+      "clothes",
+      "cap",
+      "mouse",
+      "phone",
+      "cup",
+      "shoes",
+      "backpack",
+      "chair",
+      "sofa",
+      "person",
+      "door",
+      "stairs",
+      "bicycle",
+      "car",
+      "motorcycle",
+      "pole",
+      "table",
+      "trash can",
+      "bench",
+      "traffic cone",
+      "bollard",
+      "tree trunk",
+      "braille block",
+      "crosswalk"
+    ],
+    "reviewed": "2026-11-02T14:01",
+    "reviewer": "Claude (화면 판독, 2026-11-02)",
+    "not_reviewed": [
+      "book",
+      "figure",
+      "toy car"
+    ]
+  }
+}

@@ -1,0 +1,431 @@
+{
+  "version": "4.2.0",
+  "flags": {},
+  "checked": true,
+  "shapes": [
+    {
+      "label": "laptop",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          717.2016,
+          720.8649
+        ],
+        [
+          1717.3392,
+          720.8649
+        ],
+        [
+          1717.3392,
+          1080.00054
+        ],
+        [
+          717.2016,
+          1080.00054
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "backpack",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          146.9136,
+          336.07764000000003
+        ],
+        [
+          471.51071999999994,
+          336.07764000000003
+        ],
+        [
+          471.51071999999994,
+          1078.34652
+        ],
+        [
+          146.9136,
+          1078.34652
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "speaker",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          1256.87232,
+          159.38855999999998
+        ],
+        [
+          1629.5289599999999,
+          159.38855999999998
+        ],
+        [
+          1629.5289599999999,
+          705.39768
+        ],
+        [
+          1256.87232,
+          705.39768
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "bottle",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          627.216,
+          -0.000539999999985552
+        ],
+        [
+          745.0118399999999,
+          -0.000539999999985552
+        ],
+        [
+          745.0118399999999,
+          289.60254
+        ],
+        [
+          627.216,
+          289.60254
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "bottle",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          569.51232,
+          1.3132799999999945
+        ],
+        [
+          653.27424,
+          1.3132799999999945
+        ],
+        [
+          653.27424,
+          275.20344
+        ],
+        [
+          569.51232,
+          275.20344
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "cup",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          1334.78688,
+          87.8418
+        ],
+        [
+          1445.61504,
+          87.8418
+        ],
+        [
+          1445.61504,
+          159.29459999999997
+        ],
+        [
+          1334.78688,
+          159.29459999999997
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "monitor",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          1420.8,
+          0.0
+        ],
+        [
+          1920.0,
+          0.0
+        ],
+        [
+          1920.0,
+          777.6
+        ],
+        [
+          1420.8,
+          777.6
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "bottle",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          430.82592000000005,
+          1.434779999999996
+        ],
+        [
+          592.26144,
+          1.434779999999996
+        ],
+        [
+          592.26144,
+          271.38401999999996
+        ],
+        [
+          430.82592000000005,
+          271.38401999999996
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "book",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          66.37248000000001,
+          323.00694000000004
+        ],
+        [
+          197.40096,
+          323.00694000000004
+        ],
+        [
+          197.40096,
+          379.11834
+        ],
+        [
+          66.37248000000001,
+          379.11834
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "bottle",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          732.0739199999999,
+          3.780540000000019
+        ],
+        [
+          829.94208,
+          3.780540000000019
+        ],
+        [
+          829.94208,
+          289.24721999999997
+        ],
+        [
+          732.0739199999999,
+          289.24721999999997
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "bottle",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          1287.01152,
+          576.52884
+        ],
+        [
+          1343.1811200000002,
+          576.52884
+        ],
+        [
+          1343.1811200000002,
+          711.7297199999999
+        ],
+        [
+          1287.01152,
+          711.7297199999999
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "toy car",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          732.29472,
+          108.87209999999999
+        ],
+        [
+          825.2745600000001,
+          108.87209999999999
+        ],
+        [
+          825.2745600000001,
+          291.09078
+        ],
+        [
+          732.29472,
+          291.09078
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "bottle",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          1223.03808,
+          555.0217200000001
+        ],
+        [
+          1284.3974399999997,
+          555.0217200000001
+        ],
+        [
+          1284.3974399999997,
+          718.2075600000001
+        ],
+        [
+          1223.03808,
+          718.2075600000001
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "cup",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          1637.2848,
+          631.2508200000001
+        ],
+        [
+          1788.6096,
+          631.2508200000001
+        ],
+        [
+          1788.6096,
+          838.91646
+        ],
+        [
+          1637.2848,
+          838.91646
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    }
+  ],
+  "imagePath": "촬영본_000088.jpg",
+  "imageData": null,
+  "imageHeight": 1080,
+  "imageWidth": 1920,
+  "firstcv": {
+    "classes": [
+      "monitor",
+      "laptop",
+      "keyboard",
+      "tumbler",
+      "bottle",
+      "speaker",
+      "headphones",
+      "clothes",
+      "cap",
+      "mouse",
+      "phone",
+      "cup",
+      "shoes",
+      "backpack",
+      "chair",
+      "sofa",
+      "person",
+      "door",
+      "stairs",
+      "bicycle",
+      "car",
+      "motorcycle",
+      "pole",
+      "table",
+      "trash can",
+      "bench",
+      "traffic cone",
+      "bollard",
+      "tree trunk",
+      "braille block",
+      "crosswalk"
+    ],
+    "reviewed": "2026-11-02T13:47",
+    "reviewer": "Claude (화면 판독, 2026-11-02)",
+    "not_reviewed": [
+      "book",
+      "figure",
+      "toy car"
+    ]
+  }
+}

@@ -1,0 +1,458 @@
+{
+  "version": "4.2.0",
+  "flags": {},
+  "checked": true,
+  "shapes": [
+    {
+      "label": "car",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          0.0,
+          406.90432
+        ],
+        [
+          138.05184,
+          406.90432
+        ],
+        [
+          138.05184,
+          514.66752
+        ],
+        [
+          0.0,
+          514.66752
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "car",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          845.88288,
+          443.39840000000004
+        ],
+        [
+          959.9462400000001,
+          443.39840000000004
+        ],
+        [
+          959.9462400000001,
+          546.6432
+        ],
+        [
+          845.88288,
+          546.6432
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "car",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          807.9144,
+          505.42784000000006
+        ],
+        [
+          853.6401599999999,
+          505.42784000000006
+        ],
+        [
+          853.6401599999999,
+          534.55936
+        ],
+        [
+          807.9144,
+          534.55936
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "car",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          475.16400000000004,
+          459.17632000000003
+        ],
+        [
+          564.72528,
+          459.17632000000003
+        ],
+        [
+          564.72528,
+          531.55904
+        ],
+        [
+          475.16400000000004,
+          531.55904
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "person",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          211.07999999999998,
+          467.9392
+        ],
+        [
+          227.08128,
+          467.9392
+        ],
+        [
+          227.08128,
+          515.3900799999999
+        ],
+        [
+          211.07999999999998,
+          515.3900799999999
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "person",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          173.40672,
+          472.1696
+        ],
+        [
+          190.656,
+          472.1696
+        ],
+        [
+          190.656,
+          516.53312
+        ],
+        [
+          173.40672,
+          516.53312
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "person",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          162.28032,
+          465.41439999999994
+        ],
+        [
+          175.08672,
+          465.41439999999994
+        ],
+        [
+          175.08672,
+          510.5856
+        ],
+        [
+          162.28032,
+          510.5856
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "car",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          601.69488,
+          474.73152
+        ],
+        [
+          669.83088,
+          474.73152
+        ],
+        [
+          669.83088,
+          518.4000000000001
+        ],
+        [
+          601.69488,
+          518.4000000000001
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "person",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          244.73664,
+          465.4272
+        ],
+        [
+          258.44927999999993,
+          465.4272
+        ],
+        [
+          258.44927999999993,
+          516.4864
+        ],
+        [
+          244.73664,
+          516.4864
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "car",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          479.82911999999993,
+          496.51775999999995
+        ],
+        [
+          549.6787199999999,
+          496.51775999999995
+        ],
+        [
+          549.6787199999999,
+          534.29952
+        ],
+        [
+          479.82911999999993,
+          534.29952
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "car",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          702.61776,
+          498.96896
+        ],
+        [
+          741.7176,
+          498.96896
+        ],
+        [
+          741.7176,
+          528.13632
+        ],
+        [
+          702.61776,
+          528.13632
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "car",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          739.5235200000001,
+          499.72544
+        ],
+        [
+          772.59168,
+          499.72544
+        ],
+        [
+          772.59168,
+          526.5376000000001
+        ],
+        [
+          739.5235200000001,
+          526.5376000000001
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "person",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          262.45248,
+          473.30944
+        ],
+        [
+          274.99968,
+          473.30944
+        ],
+        [
+          274.99968,
+          516.2483199999999
+        ],
+        [
+          262.45248,
+          516.2483199999999
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "person",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          296.84639999999996,
+          472.04992
+        ],
+        [
+          311.95104,
+          472.04992
+        ],
+        [
+          311.95104,
+          524.05376
+        ],
+        [
+          296.84639999999996,
+          524.05376
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "crosswalk",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          0.0,
+          530.0096
+        ],
+        [
+          958.5638399999999,
+          530.0096
+        ],
+        [
+          958.5638399999999,
+          1276.39552
+        ],
+        [
+          0.0,
+          1276.39552
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    }
+  ],
+  "imagePath": "app20261026-195703_000006.jpg",
+  "imageData": null,
+  "imageHeight": 1280,
+  "imageWidth": 960,
+  "firstcv": {
+    "classes": [
+      "monitor",
+      "laptop",
+      "keyboard",
+      "tumbler",
+      "bottle",
+      "speaker",
+      "headphones",
+      "clothes",
+      "cap",
+      "mouse",
+      "phone",
+      "cup",
+      "shoes",
+      "backpack",
+      "chair",
+      "sofa",
+      "person",
+      "door",
+      "stairs",
+      "bicycle",
+      "car",
+      "motorcycle",
+      "pole",
+      "table",
+      "trash can",
+      "bench",
+      "traffic cone",
+      "bollard",
+      "tree trunk",
+      "braille block",
+      "crosswalk"
+    ],
+    "reviewed": "2026-11-02T14:01",
+    "reviewer": "Claude (화면 판독, 2026-11-02)",
+    "not_reviewed": [
+      "book",
+      "figure",
+      "toy car"
+    ]
+  }
+}

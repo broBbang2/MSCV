@@ -1,0 +1,215 @@
+{
+  "version": "4.2.0",
+  "flags": {},
+  "checked": true,
+  "shapes": [
+    {
+      "label": "cap",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          435.10463999999996,
+          117.91616000000002
+        ],
+        [
+          536.5766399999999,
+          117.91616000000002
+        ],
+        [
+          536.5766399999999,
+          311.30624
+        ],
+        [
+          435.10463999999996,
+          311.30624
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "clothes",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          323.78015999999997,
+          244.21056
+        ],
+        [
+          674.1072,
+          244.21056
+        ],
+        [
+          674.1072,
+          743.5475199999998
+        ],
+        [
+          323.78015999999997,
+          743.5475199999998
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "backpack",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          860.8228799999999,
+          839.20128
+        ],
+        [
+          959.9995200000001,
+          839.20128
+        ],
+        [
+          959.9995200000001,
+          1280.0
+        ],
+        [
+          860.8228799999999,
+          1280.0
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "door",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          1.4063999999999943,
+          54.26111999999996
+        ],
+        [
+          837.0499199999999,
+          54.26111999999996
+        ],
+        [
+          837.0499199999999,
+          1280.0006400000002
+        ],
+        [
+          1.4063999999999943,
+          1280.0006400000002
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "figure",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          884.87088,
+          743.4105599999999
+        ],
+        [
+          917.24304,
+          743.4105599999999
+        ],
+        [
+          917.24304,
+          763.42336
+        ],
+        [
+          884.87088,
+          763.42336
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "book",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          864.16464,
+          762.54464
+        ],
+        [
+          921.7118399999999,
+          762.54464
+        ],
+        [
+          921.7118399999999,
+          787.67872
+        ],
+        [
+          864.16464,
+          787.67872
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    }
+  ],
+  "imagePath": "app20261025-225953_000006.jpg",
+  "imageData": null,
+  "imageHeight": 1280,
+  "imageWidth": 960,
+  "firstcv": {
+    "classes": [
+      "monitor",
+      "laptop",
+      "keyboard",
+      "tumbler",
+      "bottle",
+      "speaker",
+      "headphones",
+      "clothes",
+      "cap",
+      "mouse",
+      "phone",
+      "cup",
+      "shoes",
+      "backpack",
+      "chair",
+      "sofa",
+      "person",
+      "door",
+      "stairs",
+      "bicycle",
+      "car",
+      "motorcycle",
+      "pole",
+      "table",
+      "trash can",
+      "bench",
+      "traffic cone",
+      "bollard",
+      "tree trunk",
+      "braille block",
+      "crosswalk"
+    ],
+    "reviewed": "2026-11-02T14:01",
+    "reviewer": "Claude (화면 판독, 2026-11-02)",
+    "not_reviewed": [
+      "book",
+      "figure",
+      "toy car"
+    ]
+  }
+}

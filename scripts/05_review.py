@@ -8,8 +8,12 @@
 
     uv run scripts/05_review.py open --split train   # 학습용도 검수할 때
 
+정답으로 남기기 (사진을 전부 검수한 뒤에만):
+    uv run scripts/05_review.py save --gold      # data/gold/에도 저장 → 13_gold.py 채점의 정답이 된다
+
 open은 이미 검수 중인 JSON이 있으면 덮어쓰지 않는다. 처음부터 다시 하려면 --reset.
-04_auto_label.py를 다시 돌리면 mine/ 전체가 새로 만들어지므로 검수한 내용도 사라진다.
+04_auto_label.py를 다시 돌리면 mine/ 전체가 새로 만들어진다. --gold로 남긴 사진은 04가 정답을 다시 쓰지만,
+--gold 없이 저장한 검수 내용은 사라진다.
 """
 
 from __future__ import annotations
@@ -17,6 +21,7 @@ from __future__ import annotations
 import argparse
 import json
 import subprocess
+from datetime import datetime
 from pathlib import Path
 
 import cv2
@@ -25,7 +30,8 @@ import yaml
 ROOT = Path(__file__).resolve().parents[1]
 DATASETS_DIR = ROOT / "data" / "datasets"
 DATA_DIR = DATASETS_DIR / "mine"
-APP = ["uvx", "--from", "x-anylabeling-cvhub[cpu]", "xanylabeling"]
+GOLD_DIR = ROOT / "data" / "gold"  # 04_auto_label.py의 GOLD_DIR과 같은 곳
+APP =["uvx", "--from", "x-anylabeling-cvhub[cpu]", "xanylabeling"]
 
 
 def class_names() -> list[str]:
@@ -60,9 +66,21 @@ def yolo_to_json(split: str, names: list[str], reset: bool) -> int:
     return n
 
 
-def json_to_yolo(split: str, names: list[str]) -> tuple[int, int]:
-    """검수한 JSON을 YOLO txt로 되돌린다. 목록에 없는 이름의 박스는 알려주고 버린다."""
-    n_img = n_box = 0
+def same_labels(a: list[str], b: list[str]) -> bool:
+    """YOLO 라벨 두 벌이 같은지. JSON을 거쳐 오면 소수점 끝자리가 달라질 수 있어 조금의 차이는 같다고 본다."""
+    if len(a) != len(b):
+        return False
+    pa = sorted([float(v) for v in line.split()] for line in a)
+    pb = sorted([float(v) for v in line.split()] for line in b)
+    return all(abs(x - y) < 1e-3 for la, lb in zip(pa, pb) for x, y in zip(la, lb))
+
+
+def json_to_yolo(split: str, names: list[str]) -> tuple[int, int, int]:
+    """검수한 JSON을 YOLO txt로 되돌린다. 목록에 없는 이름의 박스는 알려주고 버린다.
+
+    검수 전 라벨과 달라진 사진 수도 센다. 선생님 라벨이 얼마나 틀렸는지 감을 잡는 숫자다.
+    """
+    n_img = n_box = n_changed = 0
     for js in sorted((DATA_DIR / "images" / split).glob("*.json")):
         data = json.loads(js.read_text())
         w, h = data["imageWidth"], data["imageHeight"]
@@ -78,10 +96,25 @@ def json_to_yolo(split: str, names: list[str]) -> tuple[int, int]:
             y1, y2 = max(min(ys), 0), min(max(ys), h)
             lines.append(f"{names.index(s['label'])} {(x1 + x2) / 2 / w:.6f} {(y1 + y2) / 2 / h:.6f} "
                          f"{(x2 - x1) / w:.6f} {(y2 - y1) / h:.6f}")
-        (DATA_DIR / "labels" / split / f"{js.stem}.txt").write_text("\n".join(lines))
+        txt = DATA_DIR / "labels" / split / f"{js.stem}.txt"
+        if not same_labels(txt.read_text().splitlines() if txt.exists() else [], lines):
+            n_changed += 1
+        txt.write_text("\n".join(lines))
         n_img += 1
         n_box += len(lines)
-    return n_img, n_box
+    return n_img, n_box, n_changed
+
+
+def save_gold(split: str, names: list[str]) -> int:
+    """검수한 JSON을 data/gold/에 정답으로 남긴다. 검수할 때 있던 클래스 목록을 함께 적어 둔다."""
+    GOLD_DIR.mkdir(parents=True, exist_ok=True)
+    n = 0
+    for js in sorted((DATA_DIR / "images" / split).glob("*.json")):
+        data = json.loads(js.read_text())
+        data["firstcv"] = {"classes": names, "reviewed": datetime.now().isoformat(timespec="minutes")}
+        (GOLD_DIR / js.name).write_text(json.dumps(data, ensure_ascii=False, indent=2))
+        n += 1
+    return n
 
 
 def main() -> None:
@@ -89,6 +122,8 @@ def main() -> None:
     parser.add_argument("action", choices=["open", "save"])
     parser.add_argument("--split", default="val", choices=["train", "val"])
     parser.add_argument("--reset", action="store_true", help="검수 중인 JSON을 버리고 자동 라벨로 다시 시작")
+    parser.add_argument("--gold", action="store_true",
+                        help="save할 때 data/gold/에 정답으로도 남긴다. 그 split의 JSON이 전부 올라가므로 다 검수한 뒤에만")
     args = parser.parse_args()
 
     names = class_names()
@@ -101,8 +136,10 @@ def main() -> None:
                         "--labels", str(labels), "--validatelabel", "exact",
                         "--nodata", "--autosave", "--no-auto-update-check"], check=False)
     else:
-        n_img, n_box = json_to_yolo(args.split, names)
-        print(f"{args.split}: 사진 {n_img}장, 박스 {n_box}개를 YOLO 라벨로 저장했어요")
+        n_img, n_box, n_changed = json_to_yolo(args.split, names)
+        print(f"{args.split}: 사진 {n_img}장, 박스 {n_box}개를 YOLO 라벨로 저장했어요 (검수로 바뀐 사진 {n_changed}장)")
+        if args.gold:
+            print(f"  data/gold/에 정답 {save_gold(args.split, names)}장을 남겼어요. 채점: uv run scripts/13_gold.py eval")
 
 
 if __name__ == "__main__":

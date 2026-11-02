@@ -1,0 +1,242 @@
+{
+  "version": "4.2.0",
+  "flags": {},
+  "checked": true,
+  "shapes": [
+    {
+      "label": "backpack",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          5.7916799999999835,
+          124.41438000000004
+        ],
+        [
+          413.38656,
+          124.41438000000004
+        ],
+        [
+          413.38656,
+          1077.06186
+        ],
+        [
+          5.7916799999999835,
+          1077.06186
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "speaker",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          1113.6,
+          21.6
+        ],
+        [
+          1363.2,
+          21.6
+        ],
+        [
+          1363.2,
+          432.0
+        ],
+        [
+          1113.6,
+          432.0
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "cup",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          1484.89344,
+          386.78310000000005
+        ],
+        [
+          1638.4972799999998,
+          386.78310000000005
+        ],
+        [
+          1638.4972799999998,
+          588.33162
+        ],
+        [
+          1484.89344,
+          588.33162
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "laptop",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          550.76352,
+          476.59752000000003
+        ],
+        [
+          1567.2767999999999,
+          476.59752000000003
+        ],
+        [
+          1567.2767999999999,
+          1078.6068
+        ],
+        [
+          550.76352,
+          1078.6068
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "monitor",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          1289.16768,
+          2.42298000000001
+        ],
+        [
+          1919.6822399999999,
+          2.42298000000001
+        ],
+        [
+          1919.6822399999999,
+          351.33318
+        ],
+        [
+          1289.16768,
+          351.33318
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "bottle",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          426.39648000000005,
+          2.80962
+        ],
+        [
+          599.4096,
+          2.80962
+        ],
+        [
+          599.4096,
+          58.7979
+        ],
+        [
+          426.39648000000005,
+          58.7979
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "figure",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          21.719040000000007,
+          516.71034
+        ],
+        [
+          149.9712,
+          516.71034
+        ],
+        [
+          149.9712,
+          667.67598
+        ],
+        [
+          21.719040000000007,
+          667.67598
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    }
+  ],
+  "imagePath": "촬영본_000072.jpg",
+  "imageData": null,
+  "imageHeight": 1080,
+  "imageWidth": 1920,
+  "firstcv": {
+    "classes": [
+      "monitor",
+      "laptop",
+      "keyboard",
+      "tumbler",
+      "bottle",
+      "speaker",
+      "headphones",
+      "clothes",
+      "cap",
+      "mouse",
+      "phone",
+      "cup",
+      "shoes",
+      "backpack",
+      "chair",
+      "sofa",
+      "person",
+      "door",
+      "stairs",
+      "bicycle",
+      "car",
+      "motorcycle",
+      "pole",
+      "table",
+      "trash can",
+      "bench",
+      "traffic cone",
+      "bollard",
+      "tree trunk",
+      "braille block",
+      "crosswalk"
+    ],
+    "reviewed": "2026-11-02T13:47",
+    "reviewer": "Claude (화면 판독, 2026-11-02)",
+    "not_reviewed": [
+      "book",
+      "figure",
+      "toy car"
+    ]
+  }
+}

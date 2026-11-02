@@ -1,0 +1,215 @@
+{
+  "version": "4.2.0",
+  "flags": {},
+  "checked": true,
+  "shapes": [
+    {
+      "label": "cap",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          448.3992,
+          83.90911999999999
+        ],
+        [
+          551.89008,
+          83.90911999999999
+        ],
+        [
+          551.89008,
+          278.62528
+        ],
+        [
+          448.3992,
+          278.62528
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "clothes",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          339.94175999999993,
+          211.81184
+        ],
+        [
+          701.856,
+          211.81184
+        ],
+        [
+          701.856,
+          720.8934399999999
+        ],
+        [
+          339.94175999999993,
+          720.8934399999999
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "door",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          0.0004800000000138027,
+          33.411199999999965
+        ],
+        [
+          895.5816,
+          33.411199999999965
+        ],
+        [
+          895.5816,
+          1279.3696
+        ],
+        [
+          0.0004800000000138027,
+          1279.3696
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "backpack",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          879.4814399999999,
+          800.5510400000001
+        ],
+        [
+          959.9995200000001,
+          800.5510400000001
+        ],
+        [
+          959.9995200000001,
+          1279.5206400000002
+        ],
+        [
+          879.4814399999999,
+          1279.5206400000002
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "book",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          899.51856,
+          726.96
+        ],
+        [
+          958.99728,
+          726.96
+        ],
+        [
+          958.99728,
+          757.8886399999999
+        ],
+        [
+          899.51856,
+          757.8886399999999
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "book",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          926.7508799999999,
+          710.8684799999999
+        ],
+        [
+          960.00048,
+          710.8684799999999
+        ],
+        [
+          960.00048,
+          730.46272
+        ],
+        [
+          926.7508799999999,
+          730.46272
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    }
+  ],
+  "imagePath": "app20261025-225953_000016.jpg",
+  "imageData": null,
+  "imageHeight": 1280,
+  "imageWidth": 960,
+  "firstcv": {
+    "classes": [
+      "monitor",
+      "laptop",
+      "keyboard",
+      "tumbler",
+      "bottle",
+      "speaker",
+      "headphones",
+      "clothes",
+      "cap",
+      "mouse",
+      "phone",
+      "cup",
+      "shoes",
+      "backpack",
+      "chair",
+      "sofa",
+      "person",
+      "door",
+      "stairs",
+      "bicycle",
+      "car",
+      "motorcycle",
+      "pole",
+      "table",
+      "trash can",
+      "bench",
+      "traffic cone",
+      "bollard",
+      "tree trunk",
+      "braille block",
+      "crosswalk"
+    ],
+    "reviewed": "2026-11-02T14:01",
+    "reviewer": "Claude (화면 판독, 2026-11-02)",
+    "not_reviewed": [
+      "book",
+      "figure",
+      "toy car"
+    ]
+  }
+}

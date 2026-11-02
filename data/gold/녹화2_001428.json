@@ -1,0 +1,134 @@
+{
+  "version": "4.2.0",
+  "flags": {},
+  "checked": true,
+  "shapes": [
+    {
+      "label": "chair",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          144.15948000000003,
+          79.12512000000005
+        ],
+        [
+          584.9118,
+          79.12512000000005
+        ],
+        [
+          584.9118,
+          1023.0048
+        ],
+        [
+          144.15948000000003,
+          1023.0048
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "trash can",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          418.33961999999997,
+          949.42272
+        ],
+        [
+          851.74902,
+          949.42272
+        ],
+        [
+          851.74902,
+          1542.384
+        ],
+        [
+          418.33961999999997,
+          1542.384
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "table",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          324.0,
+          0.0
+        ],
+        [
+          1080.0,
+          0.0
+        ],
+        [
+          1080.0,
+          576.0
+        ],
+        [
+          324.0,
+          576.0
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    }
+  ],
+  "imagePath": "녹화2_001428.jpg",
+  "imageData": null,
+  "imageHeight": 1920,
+  "imageWidth": 1080,
+  "firstcv": {
+    "classes": [
+      "monitor",
+      "laptop",
+      "keyboard",
+      "tumbler",
+      "bottle",
+      "speaker",
+      "headphones",
+      "clothes",
+      "cap",
+      "mouse",
+      "phone",
+      "cup",
+      "shoes",
+      "backpack",
+      "chair",
+      "sofa",
+      "person",
+      "door",
+      "stairs",
+      "bicycle",
+      "car",
+      "motorcycle",
+      "pole",
+      "table",
+      "trash can",
+      "bench",
+      "traffic cone",
+      "bollard",
+      "tree trunk",
+      "braille block",
+      "crosswalk"
+    ],
+    "reviewed": "2026-11-02T14:01",
+    "reviewer": "Claude (화면 판독, 2026-11-02)",
+    "not_reviewed": [
+      "book",
+      "figure",
+      "toy car"
+    ]
+  }
+}

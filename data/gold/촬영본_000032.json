@@ -1,0 +1,188 @@
+{
+  "version": "4.2.0",
+  "flags": {},
+  "checked": true,
+  "shapes": [
+    {
+      "label": "laptop",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          172.8,
+          0.0
+        ],
+        [
+          1401.6,
+          0.0
+        ],
+        [
+          1401.6,
+          1080.0
+        ],
+        [
+          172.8,
+          1080.0
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "keyboard",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          1796.28384,
+          398.63015999999993
+        ],
+        [
+          1919.9990400000002,
+          398.63015999999993
+        ],
+        [
+          1919.9990400000002,
+          739.69416
+        ],
+        [
+          1796.28384,
+          739.69416
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "table",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          0.0,
+          108.0
+        ],
+        [
+          1920.0,
+          108.0
+        ],
+        [
+          1920.0,
+          1080.0
+        ],
+        [
+          0.0,
+          1080.0
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "figure",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          1817.77248,
+          12.492360000000001
+        ],
+        [
+          1919.9337600000001,
+          12.492360000000001
+        ],
+        [
+          1919.9337600000001,
+          72.56196
+        ],
+        [
+          1817.77248,
+          72.56196
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "figure",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          1318.4236799999999,
+          877.34826
+        ],
+        [
+          1464.31296,
+          877.34826
+        ],
+        [
+          1464.31296,
+          1029.99006
+        ],
+        [
+          1318.4236799999999,
+          1029.99006
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    }
+  ],
+  "imagePath": "촬영본_000032.jpg",
+  "imageData": null,
+  "imageHeight": 1080,
+  "imageWidth": 1920,
+  "firstcv": {
+    "classes": [
+      "monitor",
+      "laptop",
+      "keyboard",
+      "tumbler",
+      "bottle",
+      "speaker",
+      "headphones",
+      "clothes",
+      "cap",
+      "mouse",
+      "phone",
+      "cup",
+      "shoes",
+      "backpack",
+      "chair",
+      "sofa",
+      "person",
+      "door",
+      "stairs",
+      "bicycle",
+      "car",
+      "motorcycle",
+      "pole",
+      "table",
+      "trash can",
+      "bench",
+      "traffic cone",
+      "bollard",
+      "tree trunk",
+      "braille block",
+      "crosswalk"
+    ],
+    "reviewed": "2026-11-02T13:47",
+    "reviewer": "Claude (화면 판독, 2026-11-02)",
+    "not_reviewed": [
+      "book",
+      "figure",
+      "toy car"
+    ]
+  }
+}

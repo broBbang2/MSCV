@@ -1,0 +1,215 @@
+{
+  "version": "4.2.0",
+  "flags": {},
+  "checked": true,
+  "shapes": [
+    {
+      "label": "laptop",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          0.18624000000002638,
+          -0.000539999999955576
+        ],
+        [
+          789.52512,
+          -0.000539999999955576
+        ],
+        [
+          789.52512,
+          1079.20134
+        ],
+        [
+          0.18624000000002638,
+          1079.20134
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "keyboard",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          1094.9212799999998,
+          465.4098000000001
+        ],
+        [
+          1920.00096,
+          465.4098000000001
+        ],
+        [
+          1920.00096,
+          856.53828
+        ],
+        [
+          1094.9212799999998,
+          856.53828
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "table",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          0.0,
+          237.6
+        ],
+        [
+          1920.0,
+          237.6
+        ],
+        [
+          1920.0,
+          1080.0
+        ],
+        [
+          0.0,
+          1080.0
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "toy car",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          1131.7468800000001,
+          0.0
+        ],
+        [
+          1885.9363199999998,
+          0.0
+        ],
+        [
+          1885.9363199999998,
+          166.22928
+        ],
+        [
+          1131.7468800000001,
+          166.22928
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "toy car",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          1722.52704,
+          61.72847999999999
+        ],
+        [
+          1920.0009599999996,
+          61.72847999999999
+        ],
+        [
+          1920.0009599999996,
+          195.73056
+        ],
+        [
+          1722.52704,
+          195.73056
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "figure",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          915.6681600000002,
+          28.305180000000004
+        ],
+        [
+          1011.0096000000001,
+          28.305180000000004
+        ],
+        [
+          1011.0096000000001,
+          150.28578000000002
+        ],
+        [
+          915.6681600000002,
+          150.28578000000002
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    }
+  ],
+  "imagePath": "촬영본_000000.jpg",
+  "imageData": null,
+  "imageHeight": 1080,
+  "imageWidth": 1920,
+  "firstcv": {
+    "classes": [
+      "monitor",
+      "laptop",
+      "keyboard",
+      "tumbler",
+      "bottle",
+      "speaker",
+      "headphones",
+      "clothes",
+      "cap",
+      "mouse",
+      "phone",
+      "cup",
+      "shoes",
+      "backpack",
+      "chair",
+      "sofa",
+      "person",
+      "door",
+      "stairs",
+      "bicycle",
+      "car",
+      "motorcycle",
+      "pole",
+      "table",
+      "trash can",
+      "bench",
+      "traffic cone",
+      "bollard",
+      "tree trunk",
+      "braille block",
+      "crosswalk"
+    ],
+    "reviewed": "2026-11-02T13:47",
+    "reviewer": "Claude (화면 판독, 2026-11-02)",
+    "not_reviewed": [
+      "book",
+      "figure",
+      "toy car"
+    ]
+  }
+}

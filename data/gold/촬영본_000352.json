@@ -1,0 +1,188 @@
+{
+  "version": "4.2.0",
+  "flags": {},
+  "checked": true,
+  "shapes": [
+    {
+      "label": "book",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          884.76288,
+          453.89915999999994
+        ],
+        [
+          1611.0259199999998,
+          453.89915999999994
+        ],
+        [
+          1611.0259199999998,
+          1077.6661199999999
+        ],
+        [
+          884.76288,
+          1077.6661199999999
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "figure",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          417.84,
+          321.45011999999997
+        ],
+        [
+          1252.79424,
+          321.45011999999997
+        ],
+        [
+          1252.79424,
+          954.1789200000001
+        ],
+        [
+          417.84,
+          954.1789200000001
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "headphones",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          1517.78112,
+          764.6254200000001
+        ],
+        [
+          1918.88832,
+          764.6254200000001
+        ],
+        [
+          1918.88832,
+          1078.98426
+        ],
+        [
+          1517.78112,
+          1078.98426
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "tumbler",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          422.4,
+          324.0
+        ],
+        [
+          1248.0,
+          324.0
+        ],
+        [
+          1248.0,
+          950.4
+        ],
+        [
+          422.4,
+          950.4
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "table",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          864.0,
+          453.6
+        ],
+        [
+          1574.4,
+          453.6
+        ],
+        [
+          1574.4,
+          1080.0
+        ],
+        [
+          864.0,
+          1080.0
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    }
+  ],
+  "imagePath": "촬영본_000352.jpg",
+  "imageData": null,
+  "imageHeight": 1080,
+  "imageWidth": 1920,
+  "firstcv": {
+    "classes": [
+      "monitor",
+      "laptop",
+      "keyboard",
+      "tumbler",
+      "bottle",
+      "speaker",
+      "headphones",
+      "clothes",
+      "cap",
+      "mouse",
+      "phone",
+      "cup",
+      "shoes",
+      "backpack",
+      "chair",
+      "sofa",
+      "person",
+      "door",
+      "stairs",
+      "bicycle",
+      "car",
+      "motorcycle",
+      "pole",
+      "table",
+      "trash can",
+      "bench",
+      "traffic cone",
+      "bollard",
+      "tree trunk",
+      "braille block",
+      "crosswalk"
+    ],
+    "reviewed": "2026-11-02T13:47",
+    "reviewer": "Claude (화면 판독, 2026-11-02)",
+    "not_reviewed": [
+      "book",
+      "figure",
+      "toy car"
+    ]
+  }
+}

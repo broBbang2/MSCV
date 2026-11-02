@@ -1,0 +1,188 @@
+{
+  "version": "4.2.0",
+  "flags": {},
+  "checked": true,
+  "shapes": [
+    {
+      "label": "cap",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          470.93567999999993,
+          150.56768
+        ],
+        [
+          571.6704,
+          150.56768
+        ],
+        [
+          571.6704,
+          391.0976
+        ],
+        [
+          470.93567999999993,
+          391.0976
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "clothes",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          362.54591999999997,
+          272.25344
+        ],
+        [
+          714.24576,
+          272.25344
+        ],
+        [
+          714.24576,
+          767.2192
+        ],
+        [
+          362.54591999999997,
+          767.2192
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "door",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          2.3779200000000067,
+          106.0512
+        ],
+        [
+          857.1696,
+          106.0512
+        ],
+        [
+          857.1696,
+          1279.87392
+        ],
+        [
+          2.3779200000000067,
+          1279.87392
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "book",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          905.82096,
+          777.03616
+        ],
+        [
+          960.00048,
+          777.03616
+        ],
+        [
+          960.00048,
+          810.6143999999999
+        ],
+        [
+          905.82096,
+          810.6143999999999
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "backpack",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          903.45168,
+          868.93824
+        ],
+        [
+          960.00048,
+          868.93824
+        ],
+        [
+          960.00048,
+          1280.0
+        ],
+        [
+          903.45168,
+          1280.0
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    }
+  ],
+  "imagePath": "app20261025-225953_000046.jpg",
+  "imageData": null,
+  "imageHeight": 1280,
+  "imageWidth": 960,
+  "firstcv": {
+    "classes": [
+      "monitor",
+      "laptop",
+      "keyboard",
+      "tumbler",
+      "bottle",
+      "speaker",
+      "headphones",
+      "clothes",
+      "cap",
+      "mouse",
+      "phone",
+      "cup",
+      "shoes",
+      "backpack",
+      "chair",
+      "sofa",
+      "person",
+      "door",
+      "stairs",
+      "bicycle",
+      "car",
+      "motorcycle",
+      "pole",
+      "table",
+      "trash can",
+      "bench",
+      "traffic cone",
+      "bollard",
+      "tree trunk",
+      "braille block",
+      "crosswalk"
+    ],
+    "reviewed": "2026-11-02T14:01",
+    "reviewer": "Claude (화면 판독, 2026-11-02)",
+    "not_reviewed": [
+      "book",
+      "figure",
+      "toy car"
+    ]
+  }
+}

@@ -1,0 +1,215 @@
+{
+  "version": "4.2.0",
+  "flags": {},
+  "checked": true,
+  "shapes": [
+    {
+      "label": "door",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          3.1545600000000107,
+          344.68577999999997
+        ],
+        [
+          1912.6368,
+          344.68577999999997
+        ],
+        [
+          1912.6368,
+          1079.21862
+        ],
+        [
+          3.1545600000000107,
+          1079.21862
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "monitor",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          506.16768,
+          176.23494
+        ],
+        [
+          615.6192,
+          176.23494
+        ],
+        [
+          615.6192,
+          278.74962
+        ],
+        [
+          506.16768,
+          278.74962
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "sofa",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          575.41152,
+          125.83296
+        ],
+        [
+          770.20512,
+          125.83296
+        ],
+        [
+          770.20512,
+          261.48744
+        ],
+        [
+          575.41152,
+          261.48744
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "backpack",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          866.0352000000001,
+          1.1415600000000026
+        ],
+        [
+          1919.5315200000002,
+          1.1415600000000026
+        ],
+        [
+          1919.5315200000002,
+          259.1406
+        ],
+        [
+          866.0352000000001,
+          259.1406
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "figure",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          1208.30112,
+          149.12154
+        ],
+        [
+          1381.78272,
+          149.12154
+        ],
+        [
+          1381.78272,
+          264.54006
+        ],
+        [
+          1208.30112,
+          264.54006
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "clothes",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          0.0,
+          669.6
+        ],
+        [
+          806.4,
+          669.6
+        ],
+        [
+          806.4,
+          1080.0
+        ],
+        [
+          0.0,
+          1080.0
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    }
+  ],
+  "imagePath": "촬영본_000584.jpg",
+  "imageData": null,
+  "imageHeight": 1080,
+  "imageWidth": 1920,
+  "firstcv": {
+    "classes": [
+      "monitor",
+      "laptop",
+      "keyboard",
+      "tumbler",
+      "bottle",
+      "speaker",
+      "headphones",
+      "clothes",
+      "cap",
+      "mouse",
+      "phone",
+      "cup",
+      "shoes",
+      "backpack",
+      "chair",
+      "sofa",
+      "person",
+      "door",
+      "stairs",
+      "bicycle",
+      "car",
+      "motorcycle",
+      "pole",
+      "table",
+      "trash can",
+      "bench",
+      "traffic cone",
+      "bollard",
+      "tree trunk",
+      "braille block",
+      "crosswalk"
+    ],
+    "reviewed": "2026-11-02T13:47",
+    "reviewer": "Claude (화면 판독, 2026-11-02)",
+    "not_reviewed": [
+      "book",
+      "figure",
+      "toy car"
+    ]
+  }
+}

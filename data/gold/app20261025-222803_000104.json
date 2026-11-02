@@ -1,0 +1,215 @@
+{
+  "version": "4.2.0",
+  "flags": {},
+  "checked": true,
+  "shapes": [
+    {
+      "label": "backpack",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          0.04320000000001656,
+          866.9504000000001
+        ],
+        [
+          308.49888,
+          866.9504000000001
+        ],
+        [
+          308.49888,
+          1279.84768
+        ],
+        [
+          0.04320000000001656,
+          1279.84768
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "bottle",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          503.92320000000007,
+          728.9247999999999
+        ],
+        [
+          588.9024,
+          728.9247999999999
+        ],
+        [
+          588.9024,
+          988.65088
+        ],
+        [
+          503.92320000000007,
+          988.65088
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "bottle",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          405.45936000000006,
+          730.8806400000001
+        ],
+        [
+          494.06064000000003,
+          730.8806400000001
+        ],
+        [
+          494.06064000000003,
+          962.8691200000001
+        ],
+        [
+          405.45936000000006,
+          962.8691200000001
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "bottle",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          593.5296000000001,
+          738.32128
+        ],
+        [
+          659.49504,
+          738.32128
+        ],
+        [
+          659.49504,
+          944.94016
+        ],
+        [
+          593.5296000000001,
+          944.94016
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "door",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          0.0,
+          1.0195200000000426
+        ],
+        [
+          146.88768000000002,
+          1.0195200000000426
+        ],
+        [
+          146.88768000000002,
+          745.0310400000001
+        ],
+        [
+          0.0,
+          745.0310400000001
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "bottle",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          262.40352,
+          689.2019200000002
+        ],
+        [
+          412.95264000000003,
+          689.2019200000002
+        ],
+        [
+          412.95264000000003,
+          993.69856
+        ],
+        [
+          262.40352,
+          993.69856
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    }
+  ],
+  "imagePath": "app20261025-222803_000104.jpg",
+  "imageData": null,
+  "imageHeight": 1280,
+  "imageWidth": 960,
+  "firstcv": {
+    "classes": [
+      "monitor",
+      "laptop",
+      "keyboard",
+      "tumbler",
+      "bottle",
+      "speaker",
+      "headphones",
+      "clothes",
+      "cap",
+      "mouse",
+      "phone",
+      "cup",
+      "shoes",
+      "backpack",
+      "chair",
+      "sofa",
+      "person",
+      "door",
+      "stairs",
+      "bicycle",
+      "car",
+      "motorcycle",
+      "pole",
+      "table",
+      "trash can",
+      "bench",
+      "traffic cone",
+      "bollard",
+      "tree trunk",
+      "braille block",
+      "crosswalk"
+    ],
+    "reviewed": "2026-11-02T14:01",
+    "reviewer": "Claude (화면 판독, 2026-11-02)",
+    "not_reviewed": [
+      "book",
+      "figure",
+      "toy car"
+    ]
+  }
+}

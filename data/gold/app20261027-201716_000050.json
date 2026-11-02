@@ -1,0 +1,188 @@
+{
+  "version": "4.2.0",
+  "flags": {},
+  "checked": true,
+  "shapes": [
+    {
+      "label": "book",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          204.88799999999998,
+          428.52927999999997
+        ],
+        [
+          441.71616,
+          428.52927999999997
+        ],
+        [
+          441.71616,
+          737.2025600000001
+        ],
+        [
+          204.88799999999998,
+          737.2025600000001
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "book",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          744.85056,
+          312.52288
+        ],
+        [
+          959.97312,
+          312.52288
+        ],
+        [
+          959.97312,
+          661.49568
+        ],
+        [
+          744.85056,
+          661.49568
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "book",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          15.398879999999998,
+          497.17376
+        ],
+        [
+          226.73615999999998,
+          497.17376
+        ],
+        [
+          226.73615999999998,
+          751.8783999999999
+        ],
+        [
+          15.398879999999998,
+          751.8783999999999
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "book",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          0.00048000000000048004,
+          426.19328
+        ],
+        [
+          45.6456,
+          426.19328
+        ],
+        [
+          45.6456,
+          768.9299199999999
+        ],
+        [
+          0.00048000000000048004,
+          768.9299199999999
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "book",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          0.0,
+          0.06399999999999295
+        ],
+        [
+          447.48287999999997,
+          0.06399999999999295
+        ],
+        [
+          447.48287999999997,
+          269.90592
+        ],
+        [
+          0.0,
+          269.90592
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    }
+  ],
+  "imagePath": "app20261027-201716_000050.jpg",
+  "imageData": null,
+  "imageHeight": 1280,
+  "imageWidth": 960,
+  "firstcv": {
+    "classes": [
+      "monitor",
+      "laptop",
+      "keyboard",
+      "tumbler",
+      "bottle",
+      "speaker",
+      "headphones",
+      "clothes",
+      "cap",
+      "mouse",
+      "phone",
+      "cup",
+      "shoes",
+      "backpack",
+      "chair",
+      "sofa",
+      "person",
+      "door",
+      "stairs",
+      "bicycle",
+      "car",
+      "motorcycle",
+      "pole",
+      "table",
+      "trash can",
+      "bench",
+      "traffic cone",
+      "bollard",
+      "tree trunk",
+      "braille block",
+      "crosswalk"
+    ],
+    "reviewed": "2026-11-02T14:01",
+    "reviewer": "Claude (화면 판독, 2026-11-02)",
+    "not_reviewed": [
+      "book",
+      "figure",
+      "toy car"
+    ]
+  }
+}

@@ -1,0 +1,242 @@
+{
+  "version": "4.2.0",
+  "flags": {},
+  "checked": true,
+  "shapes": [
+    {
+      "label": "monitor",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          0.0,
+          0.0006399999999828765
+        ],
+        [
+          718.95888,
+          0.0006399999999828765
+        ],
+        [
+          718.95888,
+          417.38944000000004
+        ],
+        [
+          0.0,
+          417.38944000000004
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "keyboard",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          0.46764000000001804,
+          801.28448
+        ],
+        [
+          476.45316,
+          801.28448
+        ],
+        [
+          476.45316,
+          1140.83648
+        ],
+        [
+          0.46764000000001804,
+          1140.83648
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "mouse",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          577.3204800000001,
+          974.14272
+        ],
+        [
+          719.1791999999999,
+          974.14272
+        ],
+        [
+          719.1791999999999,
+          1260.5324799999999
+        ],
+        [
+          577.3204800000001,
+          1260.5324799999999
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "toy car",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          321.59015999999997,
+          729.6793600000001
+        ],
+        [
+          457.93656,
+          729.6793600000001
+        ],
+        [
+          457.93656,
+          801.92768
+        ],
+        [
+          321.59015999999997,
+          801.92768
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "toy car",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          0.6145200000000051,
+          517.69408
+        ],
+        [
+          394.3328399999999,
+          517.69408
+        ],
+        [
+          394.3328399999999,
+          634.6822400000001
+        ],
+        [
+          0.6145200000000051,
+          634.6822400000001
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "toy car",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          280.8882,
+          504.15487999999993
+        ],
+        [
+          387.26172,
+          504.15487999999993
+        ],
+        [
+          387.26172,
+          542.28352
+        ],
+        [
+          280.8882,
+          542.28352
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "table",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          0.0,
+          520.4192
+        ],
+        [
+          720.0,
+          520.4192
+        ],
+        [
+          720.0,
+          1268.3859200000002
+        ],
+        [
+          0.0,
+          1268.3859200000002
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    }
+  ],
+  "imagePath": "app20261025-162811_000040.jpg",
+  "imageData": null,
+  "imageHeight": 1280,
+  "imageWidth": 720,
+  "firstcv": {
+    "classes": [
+      "monitor",
+      "laptop",
+      "keyboard",
+      "tumbler",
+      "bottle",
+      "speaker",
+      "headphones",
+      "clothes",
+      "cap",
+      "mouse",
+      "phone",
+      "cup",
+      "shoes",
+      "backpack",
+      "chair",
+      "sofa",
+      "person",
+      "door",
+      "stairs",
+      "bicycle",
+      "car",
+      "motorcycle",
+      "pole",
+      "table",
+      "trash can",
+      "bench",
+      "traffic cone",
+      "bollard",
+      "tree trunk",
+      "braille block",
+      "crosswalk"
+    ],
+    "reviewed": "2026-11-02T14:01",
+    "reviewer": "Claude (화면 판독, 2026-11-02)",
+    "not_reviewed": [
+      "book",
+      "figure",
+      "toy car"
+    ]
+  }
+}

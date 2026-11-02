@@ -6,6 +6,9 @@
 같은 물건도 부르는 이름에 따라 YOLOE 점수가 크게 달라서, 클래스마다 이름을 여러 개 주고 하나로 묶는다.
 폰을 돌려 찍어 옆으로 누운 프레임도 있어서, 90도씩 돌려서도 찾아본 뒤 결과를 합친다.
 
+사람이 검수한 정답(data/gold/, 05_review.py save --gold)이 있는 사진은 선생님 대신 정답을 라벨로 쓴다.
+그래서 이 스크립트를 다시 돌려도(08_pull_app.py가 매번 돌린다) 검수한 내용은 사라지지 않는다.
+
 실행 예:
     uv run scripts/04_auto_label.py                 # 기본 임계값 0.2
     uv run scripts/04_auto_label.py --conf 0.3      # 확실한 것만 (박스 수는 줄고 오답도 줄어든다)
@@ -14,6 +17,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import shutil
 from collections import Counter
 from pathlib import Path
@@ -28,6 +32,8 @@ RAW_DIR = ROOT / "data" / "raw"
 OUT_DIR = ROOT / "data" / "datasets" / "mine"
 # 10_prototypes.py가 채점해서 고른 클래스별 프로토타입. 있으면 그 클래스는 글자와 예시를 함께 준다
 PROTOTYPES = ROOT / "data" / "prototypes" / "teacher.pt"
+# 사람이 검수한 정답. 클래스 번호가 아니라 이름으로 저장해서, 클래스를 더하거나 줄여도 그대로 쓸 수 있다
+GOLD_DIR = ROOT / "data" / "gold"
 
 # 채점에만 쓰고 학습에는 절대 넣지 않는 영상 (이름이 test_로 시작하는 영상도 같은 취급)
 VAL_VIDEOS = {"촬영본"}
@@ -135,6 +141,24 @@ def predict_rotated(model: YOLOE, frame, conf: float) -> tuple[torch.Tensor, tor
     return torch.cat(boxes), torch.cat(scores), torch.cat(prompt_ids)
 
 
+def load_gold(stem: str) -> tuple[list[tuple[str, float, float, float, float]], set[str]] | None:
+    """사람 검수 정답을 (이름, x1, y1, x2, y2) 목록과 검수할 때 있던 클래스 이름들로 돌려준다. 없으면 None.
+
+    검수할 때 목록에 없던 클래스는 사람이 보지 않았으므로, 그 클래스는 정답이 없는 것으로 다룬다.
+    """
+    path = GOLD_DIR / f"{stem}.json"
+    if not path.exists():
+        return None
+    data = json.loads(path.read_text())
+    boxes = []
+    for s in data["shapes"]:
+        if s["shape_type"] != "rectangle":
+            continue
+        xs, ys = [q[0] for q in s["points"]], [q[1] for q in s["points"]]
+        boxes.append((s["label"], min(xs), min(ys), max(xs), max(ys)))
+    return boxes, set(data["firstcv"]["classes"])
+
+
 def split_of(paths: list[Path]) -> dict[Path, str]:
     """영상 단위로 train/val을 나눈다. VAL_VIDEOS와 이름이 test_로 시작하는 영상만 val이다.
 
@@ -201,24 +225,42 @@ def main() -> None:
         (OUT_DIR / sub).mkdir(parents=True)
 
     counts = Counter()
+    n_gold = 0
     for p in paths:
         frame = cv2.imread(str(p))
         h, w = frame.shape[:2]
-        boxes, scores, pids = predict_rotated(model, frame, args.conf)
-        boxes, scores, cls = clean(boxes, scores, prompt_to_class[pids], names.index("monitor"))
+        gold = load_gold(p.stem)
+        reviewed = gold[1] if gold else set()
+        # (클래스 번호, x1, y1, x2, y2, 미리보기 글자, 색). 정답은 파란색, 선생님은 초록색
+        found = []
+        if gold:
+            n_gold += 1
+            for n, x1, y1, x2, y2 in gold[0]:
+                if n not in reviewed:  # 검수하지 않은 클래스는 아래에서 선생님 라벨로 채운다
+                    continue
+                if n in names:
+                    found.append((names.index(n), x1, y1, x2, y2, f"{n} GT", (255, 128, 0)))
+                else:
+                    print(f"  정답에 있지만 지금 클래스 목록에 없는 '{n}' 무시: {p.name}")
+        # 검수할 때 목록에 없던 클래스(나중에 추가한 클래스)만 선생님 라벨로 채운다
+        if set(names) - reviewed:
+            boxes, scores, pids = predict_rotated(model, frame, args.conf)
+            boxes, scores, cls = clean(boxes, scores, prompt_to_class[pids], names.index("monitor"))
+            for (x1, y1, x2, y2), c, sc in zip(boxes.tolist(), cls.tolist(), scores.tolist()):
+                if names[c] not in reviewed:
+                    found.append((c, x1, y1, x2, y2, f"{names[c]} {sc:.2f}", (0, 255, 0)))
 
         s = split[p]
         shutil.copy2(p, OUT_DIR / "images" / s / p.name)
         lines = []
-        for (x1, y1, x2, y2), c in zip(boxes.tolist(), cls.tolist()):
+        for c, x1, y1, x2, y2, _, color in found:
             x1, x2 = max(x1, 0), min(x2, w)
             y1, y2 = max(y1, 0), min(y2, h)
             lines.append(f"{c} {(x1 + x2) / 2 / w:.6f} {(y1 + y2) / 2 / h:.6f} {(x2 - x1) / w:.6f} {(y2 - y1) / h:.6f}")
             counts[names[c]] += 1
-            cv2.rectangle(frame, (int(x1), int(y1)), (int(x2), int(y2)), (0, 255, 0), 3)
-        for (x1, y1, _, _), c, sc in zip(boxes.tolist(), cls.tolist(), scores.tolist()):
-            cv2.putText(frame, f"{names[c]} {sc:.2f}", (int(x1) + 4, int(y1) + 30),
-                        cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 255, 0), 2)
+            cv2.rectangle(frame, (int(x1), int(y1)), (int(x2), int(y2)), color, 3)
+        for c, x1, y1, _, _, text, color in found:
+            cv2.putText(frame, text, (int(x1) + 4, int(y1) + 30), cv2.FONT_HERSHEY_SIMPLEX, 1.0, color, 2)
         (OUT_DIR / "labels" / s / f"{p.stem}.txt").write_text("\n".join(lines))
         cv2.imwrite(str(OUT_DIR / "preview" / p.name), cv2.resize(frame, (960, int(960 * h / w))))
 
@@ -228,6 +270,8 @@ def main() -> None:
     )
     n_val = sum(v == "val" for v in split.values())
     print(f"사진 {len(paths)}장 (train {len(paths) - n_val} / val {n_val}), 박스 {sum(counts.values())}개")
+    if n_gold:
+        print(f"  그중 {n_gold}장은 사람이 검수한 정답(data/gold/)을 썼어요")
     for n in names:
         print(f"  {n:12s} {counts[n]}")
     print(f"미리보기: {OUT_DIR / 'preview'}")

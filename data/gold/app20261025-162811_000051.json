@@ -1,0 +1,215 @@
+{
+  "version": "4.2.0",
+  "flags": {},
+  "checked": true,
+  "shapes": [
+    {
+      "label": "monitor",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          0.0,
+          -0.0006400000000006401
+        ],
+        [
+          557.24112,
+          -0.0006400000000006401
+        ],
+        [
+          557.24112,
+          298.80128
+        ],
+        [
+          0.0,
+          298.80128
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "mouse",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          403.30548,
+          846.81792
+        ],
+        [
+          607.62492,
+          846.81792
+        ],
+        [
+          607.62492,
+          1093.7696
+        ],
+        [
+          403.30548,
+          1093.7696
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "speaker",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          472.64327999999995,
+          55.28959999999998
+        ],
+        [
+          692.89128,
+          55.28959999999998
+        ],
+        [
+          692.89128,
+          436.69888000000003
+        ],
+        [
+          472.64327999999995,
+          436.69888000000003
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "keyboard",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          0.25379999999998404,
+          702.5088
+        ],
+        [
+          307.7334,
+          702.5088
+        ],
+        [
+          307.7334,
+          977.35808
+        ],
+        [
+          0.25379999999998404,
+          977.35808
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "table",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          0.0,
+          576.0
+        ],
+        [
+          720.0,
+          576.0
+        ],
+        [
+          720.0,
+          1280.0
+        ],
+        [
+          0.0,
+          1280.0
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "toy car",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          174.69431999999998,
+          637.84448
+        ],
+        [
+          307.40472,
+          637.84448
+        ],
+        [
+          307.40472,
+          696.5324799999999
+        ],
+        [
+          174.69431999999998,
+          696.5324799999999
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    }
+  ],
+  "imagePath": "app20261025-162811_000051.jpg",
+  "imageData": null,
+  "imageHeight": 1280,
+  "imageWidth": 720,
+  "firstcv": {
+    "classes": [
+      "monitor",
+      "laptop",
+      "keyboard",
+      "tumbler",
+      "bottle",
+      "speaker",
+      "headphones",
+      "clothes",
+      "cap",
+      "mouse",
+      "phone",
+      "cup",
+      "shoes",
+      "backpack",
+      "chair",
+      "sofa",
+      "person",
+      "door",
+      "stairs",
+      "bicycle",
+      "car",
+      "motorcycle",
+      "pole",
+      "table",
+      "trash can",
+      "bench",
+      "traffic cone",
+      "bollard",
+      "tree trunk",
+      "braille block",
+      "crosswalk"
+    ],
+    "reviewed": "2026-11-02T14:01",
+    "reviewer": "Claude (화면 판독, 2026-11-02)",
+    "not_reviewed": [
+      "book",
+      "figure",
+      "toy car"
+    ]
+  }
+}

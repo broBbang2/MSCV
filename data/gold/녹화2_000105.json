@@ -1,0 +1,188 @@
+{
+  "version": "4.2.0",
+  "flags": {},
+  "checked": true,
+  "shapes": [
+    {
+      "label": "keyboard",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          0.0005400000000155281,
+          1069.29984
+        ],
+        [
+          689.72418,
+          1069.29984
+        ],
+        [
+          689.72418,
+          1644.90432
+        ],
+        [
+          0.0005400000000155281,
+          1644.90432
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "mouse",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          792.31608,
+          1256.25312
+        ],
+        [
+          1039.57344,
+          1256.25312
+        ],
+        [
+          1039.57344,
+          1483.6406399999998
+        ],
+        [
+          792.31608,
+          1483.6406399999998
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "monitor",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          0.000539999999955576,
+          2.1964800000000118
+        ],
+        [
+          882.95994,
+          2.1964800000000118
+        ],
+        [
+          882.95994,
+          891.29088
+        ],
+        [
+          0.000539999999955576,
+          891.29088
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "table",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          0.0,
+          1051.5648
+        ],
+        [
+          1080.0,
+          1051.5648
+        ],
+        [
+          1080.0,
+          1919.95392
+        ],
+        [
+          0.0,
+          1919.95392
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    },
+    {
+      "label": "speaker",
+      "shape_type": "rectangle",
+      "flags": {},
+      "points": [
+        [
+          867.71412,
+          955.32
+        ],
+        [
+          959.7949199999999,
+          955.32
+        ],
+        [
+          959.7949199999999,
+          1147.5561599999999
+        ],
+        [
+          867.71412,
+          1147.5561599999999
+        ]
+      ],
+      "group_id": null,
+      "description": null,
+      "difficult": false,
+      "attributes": {}
+    }
+  ],
+  "imagePath": "녹화2_000105.jpg",
+  "imageData": null,
+  "imageHeight": 1920,
+  "imageWidth": 1080,
+  "firstcv": {
+    "classes": [
+      "monitor",
+      "laptop",
+      "keyboard",
+      "tumbler",
+      "bottle",
+      "speaker",
+      "headphones",
+      "clothes",
+      "cap",
+      "mouse",
+      "phone",
+      "cup",
+      "shoes",
+      "backpack",
+      "chair",
+      "sofa",
+      "person",
+      "door",
+      "stairs",
+      "bicycle",
+      "car",
+      "motorcycle",
+      "pole",
+      "table",
+      "trash can",
+      "bench",
+      "traffic cone",
+      "bollard",
+      "tree trunk",
+      "braille block",
+      "crosswalk"
+    ],
+    "reviewed": "2026-11-02T14:01",
+    "reviewer": "Claude (화면 판독, 2026-11-02)",
+    "not_reviewed": [
+      "book",
+      "figure",
+      "toy car"
+    ]
+  }
+}
